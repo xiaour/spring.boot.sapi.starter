@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import java.io.File;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -126,15 +127,9 @@ public class ApiInit {
 
                             //获取字段
                             int length=paramsTypes.length;
-                            List<ApiField> apiFields=new ArrayList<>(length);
-                            for(int i=0;i<length;i++){
-                                String type=paramsTypes[i].toString().substring(paramsTypes[i].toString().lastIndexOf(".")+1,paramsTypes[i].toString().length());
-                                ApiField apiField= new ApiField();
-                                apiField.setName(paramNames[i]);
-                                apiField.setType(type);
 
-                                apiFields.add(apiField);
-                            }
+                            List<ApiField> apiFields=getDefaultType(length,paramsTypes,paramNames);
+
                             apiInfo.setFieldList(apiFields);
                             list.add(apiInfo);
                         }
@@ -148,5 +143,63 @@ public class ApiInit {
             LOG.error("Sapi init exception:",e);
         }
         return list;
+    }
+
+    private static boolean isJavaClass(Class<?> clz) {
+        return clz != null && clz.getClassLoader() == null;
+    }
+
+    /**
+     * 获取默认基本类型字段
+     * @param length
+     * @param paramsTypes
+     * @param paramNames
+     * @return
+     */
+    private static List<ApiField> getDefaultType(int length,Class<?> paramsTypes[],String[] paramNames){
+        List<ApiField> apiFields=new ArrayList<>(length);
+
+        for(int i=0;i<length;i++){
+            if(isJavaClass(paramsTypes[i])) {
+                String type = getTypeName(paramsTypes[i].toString());
+                ApiField apiField = new ApiField();
+                apiField.setName(paramNames[i]);
+                apiField.setType(type);
+
+                apiFields.add(apiField);
+            }else{
+                getCustomType(paramsTypes[i],apiFields);
+            }
+        }
+        return apiFields;
+    }
+
+    /**
+     * 获取自定义类的所有属性
+     * @param clz
+     * @return
+     */
+    private static void getCustomType(Class clz,List<ApiField> apiFields){
+        try {
+            Field[] fields = clz.getDeclaredFields();//根据Class对象获得属性 私有的也可以获得
+            for(Field f : fields) {
+                ApiField apiField = new ApiField();
+                apiField.setName(f.getName());
+                apiField.setType(getTypeName(f.getType().getName()));
+
+                apiFields.add(apiField);
+            }
+        } catch(Exception e) {
+            LOG.error("Sapi getCustomType exception:",e);
+        }
+    }
+
+    /**
+     * 截取类型
+     * @param typeName
+     * @return
+     */
+    private static String getTypeName(String typeName){
+        return  typeName.toString().substring(typeName.toString().lastIndexOf(".") + 1,typeName.toString().length());
     }
 }
