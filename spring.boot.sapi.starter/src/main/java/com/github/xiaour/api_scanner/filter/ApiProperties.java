@@ -3,6 +3,7 @@ package com.github.xiaour.api_scanner.filter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+
 /**
  * @Author: Xiaour
  * @Description:
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix="spring.api.base")
-public class ApiProperties {
+public class ApiProperties{
+
 
     private String [] pack;//包路径
 
@@ -22,4 +24,5 @@ public class ApiProperties {
     public void setPack(String[] pack) {
         this.pack = pack;
     }
+
 }

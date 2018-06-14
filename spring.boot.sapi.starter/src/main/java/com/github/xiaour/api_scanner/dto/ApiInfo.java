@@ -21,6 +21,16 @@ public class ApiInfo {
 
     private String other;//其他返回值
 
+    private String name;//名称
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getUrl() {
         return url;

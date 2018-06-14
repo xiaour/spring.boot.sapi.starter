@@ -9,6 +9,40 @@
     <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!--<script src="//cdn.bootcss.com/prettify/r298/prettify.min.js"></script>-->
     <script src="//cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+    <STYLE>
+        textarea,input{
+            background:none;
+            outline:none;
+            border:1px black solid;
+        }
+        .input_st {
+            border: 0px;border-bottom: 1px solid #CCCCCC;background-color:#EEEEEE;
+        }
+
+        .input_title {
+            min-width: 430px;
+        }
+        .input_st:hover {
+            border: 1px;border-bottom: 1px solid #CCCCCC;background-color:#EEEEEE;
+        }
+
+        input::-webkit-input-placeholder{
+            color:#DAA520;
+            font-style: oblique;
+        }
+        input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+            color:#DAA520;
+            font-style: oblique;
+        }
+        input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+            color:#DAA520;
+            font-style: oblique;
+        }
+        input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
+            color:#DAA520;
+            font-style: oblique;
+        }
+    </STYLE>
 </head>
 <body>
 ​<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -20,6 +54,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">最新API</a></li>
                 <li><a href="#">历史版本</a></li>
+                <li><a href="#">设置</a></li>
             </ul>
         </div>
     </div>
@@ -27,38 +62,51 @@
 
 <div class="container" style="padding-top: 35px;min-height: 400px;">
     <div id="apiList" class="row" v-cloak>
-        <div class="col-sm-12 well well-lg" v-for="data in apiDataList">
-            <h3 class="page-header">请输入接口名称</h3>
-            <p>接口说明：{{data.remark}}</p>
-            <p>接口URL： {{data.url}}</p>
-            <p>请求类型：{{data.requestType}}</p>
-            <p><table class="table table-bordered">
-            <caption>接口字段：</caption>
+        <div class="jumbotron " v-for="data in apiDataList">
+            <p>
+                接口名称：<input type="text" class="input_st input_title" placeholder="请输入接口名称" v-model="data.name" maxlength="128">
+            </p>
+                <p>
+                <p>接口URL： {{data.url}}</p>
+                <p>请求类型：{{data.requestType}}</p>
+                <p>
+
+            <table class="table table-bordered">
+            <caption>接口参数：</caption>
             <thead>
             <tr>
-                <th>字段</th>
-                <th>类型</th>
-                <th>是否必须</th>
-                <th>备注</th>
+                <th style="width:25%">字段</th>
+                <th style="width:25%">类型</th>
+                <th style="width:25%">是否必须</th>
+                <th style="width:25%">备注</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="field in data.fieldList">
                 <td>{{field.name}}</td>
                 <td>{{field.type}}</td>
-                <td>{{field.notNull}}</td>
-                <td>{{field.remark}}</td>
+                <td><input type="text" class="input_st" placeholder="Y / N" v-model="field.notNull"></td>
+                <td><input type="text" class="input_st" placeholder="字段说明" v-model="field.remark"></td>
             </tr>
 
             </tbody>
         </table>
+            <p>接口说明：
+            <pre>
+            {{data.success}}
+            </pre>
+            </p>
+
             </p>
             <p>成功：
             <pre>
             {{data.success}}
             </pre>
             </p>
-            <p>其他：{{data.error}}</p>
+            <p>其他：</p>
+            <pre>
+            {{data.error}}
+            </pre>
         </div>
 
 

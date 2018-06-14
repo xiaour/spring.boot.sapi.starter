@@ -165,7 +165,6 @@ public class ApiInit {
                 ApiField apiField = new ApiField();
                 apiField.setName(paramNames[i]);
                 apiField.setType(type);
-
                 apiFields.add(apiField);
             }else{
                 getCustomType(paramsTypes[i],apiFields);

@@ -22,6 +22,8 @@ public class ApiServlet extends HttpServlet {
 
     protected final String resourcePath;
 
+    private final static Integer ipHashCode="172.16.10.183".hashCode();
+
 
     public ApiServlet(){
         this.resourcePath = "support/http";
@@ -30,6 +32,7 @@ public class ApiServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
 
         String contextPath = request.getContextPath();
         String servletPath = request.getServletPath();
