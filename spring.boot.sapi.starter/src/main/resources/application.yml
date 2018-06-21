@@ -3,3 +3,6 @@ spring:
      base:
        pack:
         - com.github.xiaour.api_scanner.ctrl
+server:
+  servlet:
+    context-path: /sboot

@@ -22,8 +22,6 @@ public class ApiServlet extends HttpServlet {
 
     protected final String resourcePath;
 
-    private final static Integer ipHashCode="172.16.10.183".hashCode();
-
 
     public ApiServlet(){
         this.resourcePath = "support/http";

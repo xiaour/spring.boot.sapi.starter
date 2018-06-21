@@ -8,6 +8,7 @@ import com.github.xiaour.api_scanner.logging.LogFactory;
 import com.github.xiaour.api_scanner.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
@@ -71,6 +72,7 @@ public class ApiInit {
                     list.addAll(getReflectAllMethod(c, requestMapping.value()));
                 }
             }
+            TomcatWebServer server;
 
             simpleApiJson=JsonUtil.collectionJsonUtil(list);
             LOG.debug("Springboot sapi : open link view the API page on http://127.0.0.1:{port}/{context-path}/sapi");

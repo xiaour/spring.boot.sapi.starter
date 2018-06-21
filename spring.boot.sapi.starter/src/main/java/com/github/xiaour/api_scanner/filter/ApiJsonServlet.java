@@ -1,7 +1,5 @@
 package com.github.xiaour.api_scanner.filter;
 
-import com.github.xiaour.api_scanner.util.Utils;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
