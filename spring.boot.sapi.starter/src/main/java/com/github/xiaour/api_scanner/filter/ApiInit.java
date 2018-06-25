@@ -12,11 +12,8 @@ import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import javax.annotation.PostConstruct;
 import java.io.File;
 
@@ -107,33 +104,39 @@ public class ApiInit {
         List<ApiInfo> list= new ArrayList<>();
 
         try {
-
             do{
                 Method methods[] = mLocalClass.getDeclaredMethods(); // 取得全部的方法
                 for (Method method:methods) {
 
                     for(String route:routes){
                         String mod = Modifier.toString(method.getModifiers());
-                        // 取得方法名称
+                        RequestMapping requestMapping=method.getAnnotation(RequestMapping.class);
                         String metName = method.getName();
-                        ApiInfo apiInfo= new ApiInfo();
+                        if(requestMapping!=null){
+                            for(String mappingName:requestMapping.value()) {
 
-                        if(mod.equals("public")&&!metName.equals("toString")&&!metName.equals("equals")) {
-                            RequestMethod[] me=method.getAnnotation(RequestMapping.class).method();
-                            for(RequestMethod rm:me){
-                                apiInfo.setRequestType(apiInfo.getRequestType()!=""?apiInfo.getRequestType()+","+rm:rm.name());
+                                ApiInfo apiInfo = new ApiInfo();
+
+                                if (mod.equals("public") && !metName.equals("toString") && !metName.equals("equals")) {
+
+                                    RequestMethod[] me = method.getAnnotation(RequestMapping.class).method();
+                                    for (RequestMethod rm : me) {
+                                        apiInfo.setRequestType(apiInfo.getRequestType() != "" ? apiInfo.getRequestType() + "," + rm : rm.name());
+                                    }
+                                    apiInfo.setUrl(route + "/" + mappingName);
+                                    apiInfo.setUrl(apiInfo.getUrl().replaceAll("//","/"));
+                                    Class<?> paramsTypes[] = method.getParameterTypes();
+                                    String[] paramNames = pnd.getParameterNames(method);
+
+                                    int length = paramsTypes.length;
+
+                                    List<ApiField> apiFields = getDefaultType(length, paramsTypes, paramNames);
+
+                                    apiInfo.setFieldList(apiFields);
+                                    list.add(apiInfo);
+                                }
                             }
-                            apiInfo.setUrl(route+"/"+metName);
-                            Class<?> paramsTypes[] = method.getParameterTypes(); // 得到全部的参数类型
-                            String[] paramNames = pnd.getParameterNames(method);//返回的就是方法中的参数名列表了
 
-                            //获取字段
-                            int length=paramsTypes.length;
-
-                            List<ApiField> apiFields=getDefaultType(length,paramsTypes,paramNames);
-
-                            apiInfo.setFieldList(apiFields);
-                            list.add(apiInfo);
                         }
                     }
                 }
@@ -148,6 +151,9 @@ public class ApiInit {
     }
 
     private static boolean isJavaClass(Class<?> clz) {
+        if(clz.getName().contains("multipart.MultipartFile")){
+            return true;
+        }
         return clz != null && clz.getClassLoader() == null;
     }
 
@@ -182,7 +188,7 @@ public class ApiInit {
      */
     private static void getCustomType(Class clz,List<ApiField> apiFields){
         try {
-            Field[] fields = clz.getDeclaredFields();//根据Class对象获得属性 私有的也可以获得
+            Field[] fields = clz.getDeclaredFields();
             for(Field f : fields) {
                 ApiField apiField = new ApiField();
                 apiField.setName(f.getName());

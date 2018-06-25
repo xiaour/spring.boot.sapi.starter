@@ -25,6 +25,9 @@ public class ApiJsonServlet extends HttpServlet {
         PrintWriter out=response.getWriter() ;
         out.write(ApiInit.simpleApiJson);
         out.close();
+
+
+
     }
 
     @Override
