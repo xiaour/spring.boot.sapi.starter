@@ -19,6 +19,8 @@ spring:
         - your.controller.package2
  
  3.在浏览器中打开 http://127.0.0.1:{port}/{context-path}/sapi 就可以看到你的API接口了
+ 
+ ![avatar](https://raw.githubusercontent.com/xiaour/xiaour.github.com/master/WechatIMG2152.jpeg)
 
 
 ## 版本功能
