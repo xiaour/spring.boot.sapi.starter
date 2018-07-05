@@ -2,16 +2,19 @@ package com.github.xiaour.api_scanner.filter;
 
 import com.github.xiaour.api_scanner.dto.ApiField;
 import com.github.xiaour.api_scanner.dto.ApiInfo;
-import com.github.xiaour.api_scanner.exception.SimpleApiException;
 import com.github.xiaour.api_scanner.logging.Log;
 import com.github.xiaour.api_scanner.logging.LogFactory;
 import com.github.xiaour.api_scanner.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.stereotype.Component;
+import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.PostConstruct;
@@ -22,6 +25,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+import static org.springframework.core.annotation.AnnotationAttributes.*;
 
 
 /**
@@ -29,29 +33,31 @@ import java.util.*;
  * @Description:
  * @Date: 2018/5/30 15:02
  */
-@Component
-public class ApiInit {
+@EnableConfigurationProperties({ApiProperties.class})
+public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
 
-    private final static Log LOG = LogFactory.getLog(ApiInit.class);
-
+    private final static Log LOG = LogFactory.getLog(SapiFactoryAutoConfigure.class);
 
     @Autowired
-    private ApiProperties properties;
+    public ApiProperties properties;
 
-    protected static String simpleApiJson;
+    public static String simpleApiJson;
 
-    @PostConstruct
-    public void init(){
+    private static String annotationName="com.github.xiaour.api_scanner.annotation.Sapi";
+
+    @Bean
+    public String init(){
+
 
         LOG.debug("The springboot sapi init.");
 
         Set<Class> classes= new HashSet<>();
         try {
 
-            if(properties.getPack()==null||properties.getPack().length<=0){
-                LOG.error("Not config Springboot SimpleApi.");
-                throw new SimpleApiException("Not config Springboot SimpleApi.");
+            if(properties.getPack()==null){
+                LOG.error("Sapi annotations not config,Please Configured the Application class @Spai(controllers={\"your.controller.path1\",\"...\"})");
             }
+
             for(String packageName:properties.getPack()){
                     classes.addAll(getClassName(packageName));
             }
@@ -59,8 +65,6 @@ public class ApiInit {
             List<ApiInfo> list=new ArrayList<>();
 
             for(Class c:classes){
-
-
                 RequestMapping requestMapping= (RequestMapping) c.getAnnotation(RequestMapping.class);
 
                 if(requestMapping==null){
@@ -69,15 +73,15 @@ public class ApiInit {
                     list.addAll(getReflectAllMethod(c, requestMapping.value()));
                 }
             }
-            TomcatWebServer server;
 
             simpleApiJson=JsonUtil.collectionJsonUtil(list);
-            LOG.debug("Springboot sapi : open link view the API page on http://127.0.0.1:{port}/{context-path}/sapi");
+
             LOG.info("Springboot sapi : open link view the API page on http://127.0.0.1:{port}/{context-path}/sapi");
 
         } catch (Exception e) {
            LOG.error("Sapi init exception:",e);
         }
+        return "SUCCESS";
     }
 
     private static Set<Class> getClassName(String filePath) throws ClassNotFoundException {
@@ -133,6 +137,7 @@ public class ApiInit {
                                     List<ApiField> apiFields = getDefaultType(length, paramsTypes, paramNames);
 
                                     apiInfo.setFieldList(apiFields);
+                                    apiInfo.setId();
                                     list.add(apiInfo);
                                 }
                             }
@@ -208,5 +213,20 @@ public class ApiInit {
      */
     private static String getTypeName(String typeName){
         return  typeName.toString().substring(typeName.toString().lastIndexOf(".") + 1,typeName.toString().length());
+    }
+
+
+
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
+        AnnotationAttributes attributes = fromMap(annotationMetadata.getAnnotationAttributes(annotationName));
+        String[] values = attributes.getStringArray("controllers");
+        if(values!=null) {
+            properties=new ApiProperties();
+            properties.setPack(values);
+            init();
+        }else {
+            LOG.error("Sapi annotations not config,Please Configured the Application class @Spai(controllers={\"your.controller.path1\",\"...\"})");
+        }
     }
 }

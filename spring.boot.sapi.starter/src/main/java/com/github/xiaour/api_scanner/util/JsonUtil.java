@@ -447,45 +447,13 @@ public class JsonUtil {
         }
         return sb.toString();
     }
+
     private static String getLevelStr(int tabNum){
         StringBuffer sb = new StringBuffer();
         for(int index = 0; index < tabNum; index++){
             sb.append("\t");
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        List<ApiInfo> list= new ArrayList<>();
-        ApiInfo ai= new ApiInfo();
-        ai.setRequestType("POST");
-        ai.setUrl("http://127.0.0.1:8080");
-        ai.setError("");
-        ai.setSuccess("");
-
-        List<ApiField> dataList= new ArrayList<>();
-
-        ApiField af1= new ApiField();
-        af1.setType("String");
-        af1.setName("name");
-
-        dataList.add(af1);
-
-        ai.setFieldList(dataList);
-
-        ApiInfo ai1= new ApiInfo();
-        ai1.setRequestType("GET");
-        ai1.setUrl("http://127.0.0.1:8081");
-        ai1.setError("");
-        ai1.setSuccess("");
-
-        ai1.setFieldList(dataList);
-
-        list.add(ai);
-        list.add(ai1);
-
-        System.out.println(JsonUtil.collectionJsonUtil(list));
-
     }
 
 

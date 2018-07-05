@@ -1,10 +1,12 @@
-package com.github.xiaour.api_scanner.filter;
+package com.github.xiaour.api_scanner.servlet;
 
+import com.github.xiaour.api_scanner.filter.SapiFactoryAutoConfigure;
 import com.github.xiaour.api_scanner.logging.Log;
 import com.github.xiaour.api_scanner.logging.LogFactory;
 import com.github.xiaour.api_scanner.util.Utils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,9 +17,10 @@ import java.io.IOException;
  * @Description:
  * @Date: 2018/6/4 10:07
  */
+@WebServlet(name = "ApiServlet", urlPatterns = {"/sapi"})
 public class ApiServlet extends HttpServlet {
 
-    private final static Log LOG = LogFactory.getLog(ApiInit.class);
+    private final static Log LOG = LogFactory.getLog(SapiFactoryAutoConfigure.class);
 
 
     protected final String resourcePath;

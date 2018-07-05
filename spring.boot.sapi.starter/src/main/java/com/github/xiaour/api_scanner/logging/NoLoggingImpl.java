@@ -55,7 +55,6 @@ public class NoLoggingImpl implements Log {
     public void error(String s) {
         errorCount++;
         if (s != null) {
-            System.err.println(loggerName + " : " + s);
         }
     }
 

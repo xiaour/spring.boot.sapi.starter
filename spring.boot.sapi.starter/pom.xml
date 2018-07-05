@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.xiaour</groupId>
-	<artifactId>spring.boot.sapi.starter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>xiaour.springboot.sapi.starter</artifactId>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>spring.boot.sapi.starter</name>
+	<name>xiaour.springboot.sapi.starter</name>
 	<description>Simple API for Spring Boot</description>
 
 	<parent>
@@ -53,14 +53,14 @@
 
 	</dependencies>
 
-	<build>
+	<!--<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+	</build>-->
 
 
 </project>

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
  * @Date: 2018/5/30 15:20
  */
 
-@Component
-@ConfigurationProperties(prefix="spring.api.base")
-public class ApiProperties{
 
+@Component
+@ConfigurationProperties(prefix="spring.spai")
+public class ApiProperties{
 
     private String [] pack;//包路径
 

@@ -9,6 +9,9 @@ import java.util.List;
  */
 public class ApiInfo {
 
+
+    private Integer id;
+
     private String url;//URL
 
     private String requestType="";//请求类型
@@ -79,4 +82,13 @@ public class ApiInfo {
     public void setOther(String other) {
         this.other = other;
     }
+
+    public void setId(){
+        this.id=Math.abs(this.getUrl().hashCode());
+    }
+
+    public Integer getId(){
+        return id;
+    }
+
 }

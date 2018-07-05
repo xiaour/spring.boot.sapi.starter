@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface SApi {
+public @interface Sapi {
 
-    String userName() default  "";
+    String [] controllers() default  {""};
 }

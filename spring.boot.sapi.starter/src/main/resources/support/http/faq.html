@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SAPI. A simple api scanner</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="//cdn.bootcss.com/prettify/r298/prettify.min.js"></script>-->
+    <script src="//cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+    <script src="//cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <style>
+        .btn.active,.btn:active:focus,.btn:focus {outline:medium}
+         textarea,input,button{background:none;outline:medium;border:1px black solid;}
+        .input_st {border: 0px;border-bottom: 1px solid #CCCCCC;background-color:#F8F8F8;}
+        .input_title {min-width: 430px;}
+        .input_st:hover {border: 1px;border-bottom: 1px solid #CCCCCC;background-color:#F8F8F8;}
+        input::-webkit-input-placeholder{color:#DAA520;font-style: oblique;}
+        input::-moz-placeholder{   /* Mozilla Firefox 19+ */color:#DAA520;font-style: oblique;}
+        input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */color:#DAA520;font-style: oblique;}
+        input:-ms-input-placeholder{  /* Internet Explorer 10-11 */color:#DAA520;font-style: oblique;}
+        *{-webkit-border-radius: 0 !important;-moz-border-radius: 0 !important;border-radius: 0 !important;}
+        .form-control{border: 1px solid inherit;}
+         .btn{border: 1px solid inherit;}
+        .input-md {border: 1px solid #F8F8F8;}
+        .modal{color: #696969}
+        .jumbotron{background-color: #F8F8F8}
+    </style>
+</head>
+<body>
+​<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand " href="#"><span class="glyphicon glyphicon-leaf"></span>SAPI</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="/sapi">最新API</a></li>
+                <!--<li><a href="#">历史版本</a></li>-->
+                <li class="active"><a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 35px;min-height: 400px;">
+    <div id="apiList" class="row" v-cloak>
+        <div class="jumbotron" v-for="data in apiDataList">
+            <p>SAPI是什么？</p>
+            <hr>
+            <span>SAPI是一个基于Spring的帮助开发人员扫描Restful接口的小工具，只需要一行配置，就可以看到相应的接口以及参数。</span>
+
+            <br><br><br>
+            <p>SAPI如何测试？</p>
+            <hr>
+            <span>打开了http://127.0.0.1:{your.port}/{your.contextPath}/spai后，在每个接口右侧页面上可以看到一个绿色的三角按钮。对相关参数进行赋值后点击"Send"就可以看到相关的输出结果了。</span>
+
+            <br><br><br>
+            <p>如何获取源码or提Issues？</p>
+            <hr>
+            <span>Sapi是一个开源的组件，任何人都可以在Apache License 2.0的规范下修改源码。https://github.com/xiaour/spring.boot.sapi.starter,同时也欢迎各位开发者Star ^_^</span>
+
+
+            <br><br><br>
+            <p>开发者微信</p>
+            <hr>
+            <span>欢迎加微信 Ghost-999 共同进步！</span>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<footer class="footer" style="border-top: 1px solid #CCCCCC">
+    <div class="container text-center ">
+        <br>
+        <span>SAPI is a simple api starter for spring</span>
+        <h6> sapi V1.0 ©️ xiaour</h6>
+    </div>
+</footer>
+</body>
+
+</html>

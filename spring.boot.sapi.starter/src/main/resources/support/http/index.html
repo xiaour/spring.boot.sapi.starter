@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v="http://www.w3.org/1999/xhtml">
 <head>
-    <title>SAPI. A simple api starter for Spring</title>
+    <title>SAPI. A simple api scanner</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -37,8 +37,8 @@
         <div>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">最新API</a></li>
-                <li><a href="#">历史版本</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+                <!--<li><a href="#">历史版本</a></li>-->
+                <li><a href="/faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
             </ul>
         </div>
     </div>
@@ -48,24 +48,23 @@
     <div id="apiList" class="row" v-cloak>
         <div class="jumbotron" v-for="data in apiDataList">
             <div>
-                接口名称：<input type="text" class="input_st input_title" placeholder="请输入接口名称" v-model="data.name" maxlength="128">
+                <div>接口URL： {{data.url}}</div>
+                <!--接口名称：<input type="text" class="input_st input_title" placeholder="请输入接口名称" v-model="data.name" maxlength="128">-->
                 <div class="btn-group pull-right">
                     <button type="button" class="btn btn-success" v-on:click="openDebug(data)" data-toggle="modal" data-target="#debugModal">
                         <span class="glyphicon glyphicon-play"></span>
                     </button>
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <!--<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li><a href="#">Debug in new Window</a></li>
-                    </ul>
+                    </ul>-->
                 </div>
             </div>
 
             <span>
-                <br>
-                <div>接口URL： {{data.url}}</div>
                 <br>
                 <div>请求类型：{{data.requestType}}</div>
             </span>
@@ -75,24 +74,24 @@
             <caption>接口参数：</caption>
             <thead>
             <tr>
-                <th style="width:25%">字段</th>
-                <th style="width:25%">类型</th>
-                <th style="width:25%">是否必须</th>
-                <th style="width:25%">备注</th>
+                <th style="width:50%">字段</th>
+                <th style="width:50%">类型</th>
+                <!--<th style="width:25%">是否必须</th>
+                <th style="width:25%">备注</th>-->
             </tr>
             </thead>
             <tbody>
             <tr v-for="field in data.fieldList">
                 <td>{{field.name}}</td>
                 <td>{{field.type}}</td>
-                <td><input type="text" class="input_st" placeholder="Y / N" v-model="field.notNull"></td>
-                <td><input type="text" class="input_st" placeholder="字段说明" v-model="field.remark"></td>
+                <!--<td><input type="text" class="input_st" placeholder="Y / N" v-model="field.notNull"></td>-->
+                <!--<td><input type="text" class="input_st" placeholder="字段说明" v-model="field.remark"></td>-->
             </tr>
 
             </tbody>
         </table>
             </div>
-                <div>接口说明：
+            <!--<div>接口说明：
                 <pre>
                 {{data.success}}
                 </pre>
@@ -109,6 +108,7 @@
                 {{data.error}}
                 </pre>
                 </div>
+                -->
         </div>
 
 
@@ -119,11 +119,13 @@
         <div class="modal-dialog" style="width:65%;">
             <form id="modal-form"  enctype="multipart/form-data">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="reset" class="close" data-dismiss="modal" aria-hidden="true" v-on:click="close">×</button>
+                <div class="modal-header" style="padding: 10px">
+                    <button type="reset" class="close" data-dismiss="modal" aria-hidden="true" v-on:click="close">
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                    </button>
                     <h4 class="modal-title" id="myModalLabel">API Debug</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 5px">
                     <div class="input-group">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default">{{requestType}}</button>
@@ -145,7 +147,7 @@
                         </span>
                     </div><!-- /input-group -->
                     <br>
-                    <table class="table table-condensed">
+                    <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th style="width:25%">Parameter</th>
@@ -163,7 +165,7 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-condensed">
+                    <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th colspan="2" style="text-align: center;">Headers</th>
