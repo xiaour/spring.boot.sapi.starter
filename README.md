@@ -1,22 +1,31 @@
 # spring.boot.sapi.starter
-一个简单的API输出工具，只需一行配置，即可将接口中的所有API接口及参数全部以结构化的方式输出的页面上。
+一个简单的API输出工具，只需简单配置，即可将接口中的所有API接口及参数全部以结构化的方式输出的页面上。
 基于SpringMvc或Springboot的接口管理工具
 
-1.在工程pom.xml中引入
-
+1.下载并打包Jar配置好POM
+```xml
 <dependency>
-  <groupId>com.github.xiaour</groupId>
-  <artifactId>spring.boot.sapi.starter</artifactId>
+   <groupId>com.github.xiaour</groupId>
+   <artifactId>xiaour.springboot.sapi.starter</artifactId>
+   <version>1.0</version>
+   <scope>system</scope>
+   <systemPath>${project.basedir}/libs/xiaour.springboot.sapi.starter-1.0.jar</systemPath>
 </dependency>
+```
+2.启动类加入注解Sapi和ServletComponentScan
 
-2.在工程配置文件 application.yml中加入
+```java
+@Sapi(controllers = {"com.example.demo.ctrl","com.example.demo.ctrl2"})
+@ServletComponentScan(basePackages = {"com.github.xiaour.api_scanner.servlet"})
+@ComponentScan
+@SpringBootApplication
+public class DemoApplication {
 
-spring:
-   api:
-     base:
-       pack:
-        - your.controller.package1
-        - your.controller.package2
+   public static void main(String[] args) {
+      SpringApplication.run(DemoApplication.class, args);
+   }
+}
+```
  
  3.在浏览器中打开 http://127.0.0.1:{port}/{context-path}/sapi 就可以看到你的API接口了
  
