@@ -46,7 +46,7 @@
 
 <div class="container" style="padding-top: 35px;min-height: 400px;">
     <div id="apiList" class="row" v-cloak>
-        <div class="jumbotron" v-for="data in apiDataList">
+        <div class="jumbotron" v-for="data in apiList">
             <div>
                 <div>接口URL： {{data.url}}</div>
                 <!--接口名称：<input type="text" class="input_st input_title" placeholder="请输入接口名称" v-model="data.name" maxlength="128">-->
@@ -54,13 +54,6 @@
                     <button type="button" class="btn btn-success" v-on:click="openDebug(data)" data-toggle="modal" data-target="#debugModal">
                         <span class="glyphicon glyphicon-play"></span>
                     </button>
-                    <!--<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Debug in new Window</a></li>
-                    </ul>-->
                 </div>
             </div>
 
@@ -110,9 +103,16 @@
                 </div>
                 -->
         </div>
-
+        <nav>
+            <ul class="pager">
+                <li><a v-on:click="jumpPage(-1)">上一页</a></li>
+                <li>{{currentPage}}/{{totalPage}}</li>
+                <li><a v-on:click="jumpPage(1)">下一页</a></li>
+            </ul>
+        </nav>
 
     </div>
+
 
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="debugModal" v-cloak tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
@@ -203,8 +203,13 @@
     $(function(){
         vm = new Vue({
             el:'#apiList',
-            data:{apiDataList : []
+            data:{apiList : [],
+                currentPage:1,
+                totalPage:1
+            }, mounted:function () {
+                this.getmc(1);
             },
+
             methods: {
                 openDebug: function (data) {
                     var url = window.location.href;
@@ -215,6 +220,34 @@
                     }
                     vm2.returnData="";
                     vm2.headers=[{name:null,value:null}]
+                },
+                jumpPage:function(condition){
+                    vm.currentPage=vm.currentPage+condition;
+                    console.log(vm.currentPage)
+                    if(vm.currentPage==0){
+                        vm.currentPage=vm.currentPage+1;
+                        alert("已经是第一页了！");
+                        return;
+                    }
+                    if(vm.currentPage>vm.totalPage){
+                        alert("已经是最后一页了！");
+                        vm.currentPage=vm.currentPage-1;
+                        return;
+                    }
+                    this.getmc(vm.currentPage);
+                },getmc:function (page){
+                    var url="apiList";
+                    if(page!=null){
+                        url+="?pageNum="+page
+                    }
+                    this.$http.get(url).then(function(res) {
+                            vm.apiList = res.data.apiList;
+                            vm.totalPage = res.data.totalPage;
+                        },
+                        function (err){
+                            console.log(err);
+                        } );
+
                 }
             }
         });
@@ -228,7 +261,8 @@
                 curl:"",
                 resultMsg:"200",
                 formData:new FormData()
-            },
+            }
+            ,
             methods: {
                 doDebug: function (data) {
 
@@ -309,7 +343,6 @@
             }
         });
 
-        getmc();
     });
 
     function copy(obj){
@@ -320,15 +353,5 @@
         return newobj;
     }
 
-    function getmc(){
-        $.get("apiList",
-            function(data){
-                vm.apiDataList = data;
-            });
-    }
-
-/*
-    $(window).load(function(){$("pre").addClass("prettyprint linenums");prettyPrint();});
-*/
 </script>
 </html>

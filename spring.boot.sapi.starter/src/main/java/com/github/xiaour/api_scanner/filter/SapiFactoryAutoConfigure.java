@@ -4,7 +4,7 @@ import com.github.xiaour.api_scanner.dto.ApiField;
 import com.github.xiaour.api_scanner.dto.ApiInfo;
 import com.github.xiaour.api_scanner.logging.Log;
 import com.github.xiaour.api_scanner.logging.LogFactory;
-import com.github.xiaour.api_scanner.util.JsonUtil;
+import com.github.xiaour.api_scanner.util.SapiJsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -17,7 +17,6 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import javax.annotation.PostConstruct;
 import java.io.File;
 
 import java.lang.reflect.Field;
@@ -41,7 +40,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
     @Autowired
     public ApiProperties properties;
 
-    public static String simpleApiJson;
+    public static List<ApiInfo> simpleApiList;
 
     private static String annotationName="com.github.xiaour.api_scanner.annotation.Sapi";
 
@@ -74,7 +73,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
                 }
             }
 
-            simpleApiJson=JsonUtil.collectionJsonUtil(list);
+            simpleApiList= list;
 
             LOG.info("Springboot sapi : open link view the API page on http://127.0.0.1:{port}/{context-path}/sapi");
 

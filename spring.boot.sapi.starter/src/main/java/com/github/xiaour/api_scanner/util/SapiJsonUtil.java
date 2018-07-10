@@ -1,8 +1,7 @@
 package com.github.xiaour.api_scanner.util;
 
-import com.github.xiaour.api_scanner.dto.ApiField;
-import com.github.xiaour.api_scanner.dto.ApiInfo;
 
+import com.github.xiaour.api_scanner.dto.ApiInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,7 +14,7 @@ import java.util.*;
  * @Description:
  * @Date: 2018/6/1 14:24
  */
-public class JsonUtil {
+public class SapiJsonUtil {
 
     //Object类型类型起始字符
     private static final String OBJ_START     = "{";
@@ -40,7 +39,7 @@ public class JsonUtil {
 
     //设置日期格式
     public static void setDateFormat(String dateFormat) {
-        JsonUtil.dateFormat = dateFormat;
+        SapiJsonUtil.dateFormat = dateFormat;
     }
 
     //日期按格式输出的字符串
@@ -81,42 +80,6 @@ public class JsonUtil {
         return sb.append("\"").append(key).append("\"").append(KEY_SPLIT).toString();
     }
 
-    //该方法已被appendValue(obj)替代
-    //拼接Map中的value/Object中的属性值
-    private static String appendValue2(Object obj){
-        if(obj == null){
-            return null;
-        }
-        StringBuffer sb = objStart();
-        //获取对象属性
-        Class<? extends Object> oClass = obj.getClass();
-        Field[] fields = oClass.getDeclaredFields();
-        //判断对象有没有属性
-        if(fields.length <= 0){
-            sb.append("null");
-        }else{
-            for (Field field : fields) {
-
-                //获取私有属性，有待修改！！！  //序列化问题
-                field.setAccessible(true);
-
-                Object fieldValue = null;
-                try {
-                    fieldValue = field.get(obj);//获取属性值
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                String fieldName = field.getName();//属性名
-                //append fieldName
-                sb.append(appendKey(fieldName));
-                //append fieldValue
-                sb.append(objectJsonUtil(fieldValue));
-                sb.append(ELEM_SPLIT);
-            }
-
-        }
-        return objEnd(sb);
-    }
 
     //拼接Map中的value/Object中的属性值
     private static String appendValue(Object obj){
@@ -385,15 +348,15 @@ public class JsonUtil {
             return null;
         }
         //append start
-        StringBuffer sb = JsonUtil.objStart();
+        StringBuffer sb = SapiJsonUtil.objStart();
         //遍历map
         Set<Map.Entry<String,Object>> entrySet = map.entrySet();
         for (Map.Entry<String, Object> entry : entrySet) {
             //append key
-            sb.append(JsonUtil.appendKey(entry.getKey()));
+            sb.append(SapiJsonUtil.appendKey(entry.getKey()));
             //获取map中value
             //append value
-            sb.append(JsonUtil.objectJsonUtil((entry.getValue())));
+            sb.append(SapiJsonUtil.objectJsonUtil((entry.getValue())));
             sb.append(ELEM_SPLIT);
         }
         return objEnd(sb);
@@ -456,5 +419,112 @@ public class JsonUtil {
         return sb.toString();
     }
 
+    /**
+     * Json 字符串转ArrayList
+     * @param jsonStr
+     * @return
+     */
+    public static List<Map<String,Object>> jsonToArray(String jsonStr){
+        jsonStr=trimFirstAndLastChar(jsonStr,"[");
+        jsonStr=trimFirstAndLastChar(jsonStr,"]");
+        List<Map<String,Object>> dataList= new ArrayList<>();
+        String [] jsonList=jsonStr.split(",\\{");
+        for(String s:jsonList){
+            dataList.add(stringToMap(s));
+        }
+        return dataList;
+    }
+
+    private  static Map<String,Object> stringToMap(String jsonObj){
+        //        jsonStr=jsonStr.replaceAll("\\[","").replaceAll("\\]","");
+        Map<String,Object> map= new HashMap<>();
+        if(jsonObj.contains("[{")) {
+            jsonObj = jsonObj.replaceAll("\\{", "").replaceAll("\\}", "");
+        }
+        String [] keyValueArray=jsonObj.split(",\"");
+        for(String kv:keyValueArray){
+            String [] kvArray=kv.split("\":");
+            map.put(kvArray[0].replaceAll("\"",""),kvArray[1].replaceAll("\"",""));
+        }
+        return map;
+    }
+
+    public static String trimFirstAndLastChar(String source,String element){
+        boolean beginIndexFlag = true;
+        boolean endIndexFlag = true;
+        do{
+            int beginIndex = source.indexOf(element) == 0 ? 1 : 0;
+            int endIndex = source.lastIndexOf(element) + 1 == source.length() ? source.lastIndexOf(element) : source.length();
+            source = source.substring(beginIndex, endIndex);
+            beginIndexFlag = (source.indexOf(element) == 0);
+            endIndexFlag = (source.lastIndexOf(element) + 1 == source.length());
+        } while (beginIndexFlag || endIndexFlag);
+        return source;
+    }
+
+
+    public <T> List<List<T>> splitList(List<T> list, int pageSize)
+    {
+
+        int listSize = list.size();
+        int page = (listSize + (pageSize - 1)) / pageSize;
+
+        List<List<T>> listArray = new ArrayList<List<T>>();
+        for (int i = 0; i < page; i++)
+        {
+            List<T> subList = new ArrayList<T>();
+            for (int j = 0; j < listSize; j++)
+            {
+                int pageIndex = ((j + 1) + (pageSize - 1)) / pageSize;
+                if (pageIndex == (i + 1))
+                {
+                    subList.add(list.get(j));
+                }
+                if ((j + 1) == ((j + 1) * pageSize))
+                {
+                    break;
+                }
+            }
+            listArray.add(subList);
+        }
+        return listArray;
+    }
+
+
+    public static void main(String[] args) {
+        int pageNum=4;
+        int pageSize=10;
+
+        int size = 23;
+
+        int pageCount;
+
+        if(pageSize%size>0){
+
+            pageCount=size/pageSize+1;
+
+        }else{
+
+            pageCount=size/pageSize;
+        }
+
+        int fromIndex = pageSize * (pageNum - 1);
+
+        int toIndex = fromIndex + pageSize;
+
+        if (toIndex >= size) {
+
+            toIndex = size;
+
+        }
+        if(pageNum>pageCount+1){
+
+            fromIndex=0;
+
+            toIndex=0;
+        }
+
+        System.out.println(fromIndex+":"+toIndex);
+    }
 
 }

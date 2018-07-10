@@ -11,6 +11,28 @@
 	<name>xiaour.springboot.sapi.starter</name>
 	<description>Simple API for Spring Boot</description>
 
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/xiaour/spring.boot.sapi.starter</url>
+		<connection>https://github.com/xiaour/spring.boot.sapi.starter.git</connection>
+		<developerConnection>https://xiaour.github.io</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>xiaour</name>
+			<email>cityuu@163.com</email>
+			<url>https://xiaour.github.io</url>
+		</developer>
+	</developers>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

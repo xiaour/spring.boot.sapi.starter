@@ -100,4 +100,11 @@ public class FaqServlet extends HttpServlet {
     protected String getFilePath(String fileName) {
         return resourcePath + fileName;
     }
+
+
+    public static void main(String[] args) {
+
+        String title="SAPI based on Spring extremely simple Restful API tool";
+        System.out.println(title.replaceAll(" ","_"));
+    }
 }
