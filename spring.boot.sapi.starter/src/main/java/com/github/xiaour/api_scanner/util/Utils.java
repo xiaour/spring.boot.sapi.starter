@@ -9,11 +9,6 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/6/4 15:00
- */
 public class Utils {
     public final static int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
@@ -220,12 +215,6 @@ public class Utils {
         return murmurhash2_64(bytes, bytes.length, 0xe17a1465);
     }
 
-    /**
-     * murmur hash 2.0, The murmur hash is a relatively fast hash function from http://murmurhash.googlepages.com/ for
-     * platforms with efficient multiplication.
-     *
-     * @author Viliam Holub
-     */
     public static long murmurhash2_64(final byte[] data, int length, int seed) {
         final long m = 0xc6a4a7935bd1e995L;
         final int r = 47;

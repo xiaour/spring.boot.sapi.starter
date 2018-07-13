@@ -165,19 +165,19 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-bordered">
+                    <!--<table class="table table-bordered">
                         <thead>
                         <tr>
                             <th colspan="2" style="text-align: center;">Headers</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="head in headers">
+                        <tr v-for="head in reqHeaders">
                             <td><input type="text" class="form-control input-sm input-md" v-model="head.name" v-on:blur="addHeaders(head)" placeholder="Key"></td>
                             <td><input type="text" class="form-control input-sm input-md" v-model="head.value" v-on:blur="addHeaders(head)" placeholder="Value"></td>
                         </tr>
                         </tbody>
-                    </table>
+                    </table>-->
                        <textarea class="form-control" cols="10" rows="8" placeholder="Result data in here." readonly>{{returnData}}</textarea>
                     <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
                     <span class="label label-warning" v-else-if="resultMsg!='200'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{returnData.status}} Error: {{returnData.error}}</span>
@@ -219,7 +219,7 @@
                        data.fieldList[i].value="";
                     }
                     vm2.returnData="";
-                    vm2.headers=[{name:null,value:null}]
+                    vm2.reqHeaders=[{name:null,value:null}]
                 },
                 jumpPage:function(condition){
                     vm.currentPage=vm.currentPage+condition;
@@ -242,7 +242,7 @@
                     }
                     this.$http.get(url).then(function(res) {
                             vm.apiList = res.data.apiList;
-                            vm.totalPage = res.data.totalPage;
+                            vm.totalPage = res.data.totalPage>0?res.data.totalPage:1;
                         },
                         function (err){
                             console.log(err);
@@ -257,7 +257,7 @@
             data:{debugData:"",
                 requestType:"POST",
                 returnData:"",
-                headers:[],
+                reqHeaders:[],
                 curl:"",
                 resultMsg:"200",
                 formData:new FormData()
@@ -266,7 +266,13 @@
             methods: {
                 doDebug: function (data) {
 
-                    vm2.returnData="Requesting...";
+                    vm2.returnData = "Requesting...";
+
+                    /*for (var i = 0; i < vm2.reqHeaders.length; i++) {
+                        console.log(vm2.reqHeaders[i]);
+                        Vue.http.headers.custom[vm2.reqHeaders[i].name]=vm2.reqHeaders[i].value;
+                    }*/
+
 
                     if(vm2.requestType=="GET"){
 
@@ -278,14 +284,12 @@
                             }
                         }
 
-                        this.$http.get(vm2.curl+"?"+tempUrl)
+                        this.$http.get(vm2.curl+"?"+tempUrl,vm2.reqHeaders)
                             .then(function (res) {
-                                console.log(res);
                                     vm2.returnData=res.bodyText;
                                     vm2.resultMsg="200"
                                 },
                                 function (err){
-                                    console.log(err)
                                     vm2.returnData=err.body;
                                     vm2.resultMsg=err.status;
                                 } );
@@ -300,7 +304,7 @@
                             }
                         }
 
-                        this.$http.post(vm2.curl,vm2.formData)
+                        this.$http.post(vm2.curl,vm2.formData,vm2.reqHeaders)
                             .then(function (res) {
                                     vm2.returnData=res.bodyText;
                                     vm2.resultMsg="200"
@@ -316,7 +320,7 @@
                     vm2.requestType=type;
                 },
                 addHeaders:function (data) {
-                    var header=vm2.headers;
+                    var header=vm2.reqHeaders;
                     var flag=1;
                     for(var i=0;i<header.length;i++){
                         if(header[i].name==undefined||header[i].name=="") {
@@ -325,10 +329,9 @@
                     }
                     //如果Key都有值，则添加一行新的
                     if(flag==1){
-                        vm2.headers.push({name:null,value:null});
+                        vm2.reqHeaders.push({name:null,value:null});
                     }
 
-                    console.log(vm2.headers);
                 },close:function () {
                     vm2.debugData="";
                 },

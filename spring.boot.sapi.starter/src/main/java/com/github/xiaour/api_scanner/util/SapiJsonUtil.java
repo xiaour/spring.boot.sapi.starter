@@ -1,19 +1,12 @@
 package com.github.xiaour.api_scanner.util;
 
-
-import com.github.xiaour.api_scanner.dto.ApiInfo;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/6/1 14:24
- */
+
 public class SapiJsonUtil {
 
     //Object类型类型起始字符
@@ -149,12 +142,6 @@ public class SapiJsonUtil {
         return objEnd(sb);
     }
 
-    /**
-     * Collection to Json
-     * (List集合、Set集合转换为Json字符串)
-     * @param collection (List or Set)
-     * @return [Object1,Object2, ...]
-     */
     public static String collectionJsonUtil(Collection<?> collection){
         if(collection == null){
             return null;
@@ -169,13 +156,6 @@ public class SapiJsonUtil {
         return arrayEnd(sb);
     }
 
-    /**
-     * Collection to Json
-     * (List集合、Set集合转换为Json字符串)
-     * @param collection (List or Set)
-     * @param boo (true is format)
-     * @return [Object1,Object2, ...]
-     */
     public static String collectionJsonUtil(Collection<?> collection, boolean boo){
         String collectionJsonUtil = collectionJsonUtil(collection);
         if(boo){
@@ -184,11 +164,6 @@ public class SapiJsonUtil {
         return collectionJsonUtil;
     }
 
-    /**
-     * array to Json (Object[]转换为json串)
-     * @param oobj (Object[])
-     * @return [{"name":"jb","age":25},{"name":"xl","age":24},...]
-     */
     public static String arrayJsonUtil(Object[] oobj){
         //oobj为空直接返回null
         if(oobj == null){
@@ -202,12 +177,6 @@ public class SapiJsonUtil {
         return arrayEnd(sb);
     }
 
-    /**
-     * array to Json (Object[]转换为json串)
-     * @param oobj (Object[])
-     * @param boo (jsonFormat)
-     * @return [{"name":"jb","age":25},{"name":"xl","age":24},...]
-     */
     public static String arrayJsonUtil(Object[] oobj, boolean boo){
         String arrayJsonUtil = arrayJsonUtil(oobj);
         if(boo){
@@ -216,11 +185,7 @@ public class SapiJsonUtil {
         return arrayJsonUtil;
     }
 
-    /**
-     * Object to Json (对象转换为json串)
-     * @param obj
-     * @return {"name":"frog","age":20,"birthday":"1999-10-10 15:50:51", ...}
-     */
+
     public static String objectJsonUtil(Object obj) {
 
         if(obj == null){
@@ -274,11 +239,6 @@ public class SapiJsonUtil {
         return sb.toString();
     }
 
-    /**
-     * 转义字符的处理
-     * @param obj
-     * @return
-     */
     private static String charSequence(Object obj){
         String string = null;
         if(obj instanceof Character){
@@ -325,11 +285,6 @@ public class SapiJsonUtil {
         return sb.toString();
     }
 
-    /**
-     * Object to Json (对象转换为json串)
-     * @param obj
-     * @return {"name":"frog","age":20,"birthday":"1999-10-10 15:50:51", ...}
-     */
     public static String objectJsonUtil(Object obj, boolean boo){
         String objectJsonUtil = objectJsonUtil(obj);
         if(boo){
@@ -338,10 +293,6 @@ public class SapiJsonUtil {
         return objectJsonUtil;
     }
 
-    /**
-     * Map to Json (Map转换为json串)
-     * @return {"key":"value", ...}
-     */
     public static String mapJsonUtil(Map<String,Object> map){
         //map为空直接返回null
         if(map == null){
@@ -362,10 +313,6 @@ public class SapiJsonUtil {
         return objEnd(sb);
     }
 
-    /**
-     * Map to Json (Map转换为json串)
-     * @return {"key":"value", ...}
-     */
     public static String mapJsonUtil(Map<String,Object> map, boolean boo){
         String mapJsonUtil = mapJsonUtil(map);
         if(boo){
@@ -374,11 +321,6 @@ public class SapiJsonUtil {
         return mapJsonUtil;
     }
 
-    /**
-     * 格式化json串
-     * @param json
-     * @return json
-     */
     public static String jsonFormat(String json){
         StringBuffer sb = new StringBuffer();
         int tabNum = 0;
@@ -419,11 +361,6 @@ public class SapiJsonUtil {
         return sb.toString();
     }
 
-    /**
-     * Json 字符串转ArrayList
-     * @param jsonStr
-     * @return
-     */
     public static List<Map<String,Object>> jsonToArray(String jsonStr){
         jsonStr=trimFirstAndLastChar(jsonStr,"[");
         jsonStr=trimFirstAndLastChar(jsonStr,"]");
@@ -490,41 +427,5 @@ public class SapiJsonUtil {
         return listArray;
     }
 
-
-    public static void main(String[] args) {
-        int pageNum=4;
-        int pageSize=10;
-
-        int size = 23;
-
-        int pageCount;
-
-        if(pageSize%size>0){
-
-            pageCount=size/pageSize+1;
-
-        }else{
-
-            pageCount=size/pageSize;
-        }
-
-        int fromIndex = pageSize * (pageNum - 1);
-
-        int toIndex = fromIndex + pageSize;
-
-        if (toIndex >= size) {
-
-            toIndex = size;
-
-        }
-        if(pageNum>pageCount+1){
-
-            fromIndex=0;
-
-            toIndex=0;
-        }
-
-        System.out.println(fromIndex+":"+toIndex);
-    }
 
 }

@@ -2,11 +2,6 @@ package com.github.xiaour.api_scanner.dto;
 
 import java.util.List;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/5/31 18:19
- */
 public class ApiInfo {
 
 

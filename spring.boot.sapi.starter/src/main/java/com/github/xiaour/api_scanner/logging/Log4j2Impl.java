@@ -28,10 +28,6 @@ public class Log4j2Impl implements Log {
     private int    infoCount;
     private int    debugCount;
 
-    /**
-     * @since 0.2.21
-     * @param log
-     */
     public Log4j2Impl(Logger log){
         this.log = log;
     }

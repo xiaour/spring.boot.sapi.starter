@@ -26,31 +26,16 @@ public final class Resources extends Object {
     private Resources(){
     }
 
-    /**
-     * Returns the default classloader (may be null).
-     * 
-     * @return The default classloader
-     */
+
     public static ClassLoader getDefaultClassLoader() {
         return defaultClassLoader;
     }
 
-    /**
-     * Sets the default classloader
-     * 
-     * @param defaultClassLoader - the new default ClassLoader
-     */
+
     public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
         Resources.defaultClassLoader = defaultClassLoader;
     }
 
-    /**
-     * Loads a class
-     * 
-     * @param className - the class to load
-     * @return The loaded class
-     * @throws ClassNotFoundException If the class cannot be found (duh!)
-     */
     public static Class<?> classForName(String className) throws ClassNotFoundException {
         Class<?> clazz = null;
         try {

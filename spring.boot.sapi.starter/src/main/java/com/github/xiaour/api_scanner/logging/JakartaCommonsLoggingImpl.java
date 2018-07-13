@@ -27,10 +27,7 @@ public class JakartaCommonsLoggingImpl implements com.github.xiaour.api_scanner.
     private int infoCount;
     private int debugCount;
 
-    /**
-     * @since 0.2.1
-     * @param log
-     */
+
     public JakartaCommonsLoggingImpl(Log log){
         this.log = log;
     }

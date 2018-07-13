@@ -12,11 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/6/4 10:07
- */
 @WebServlet(name = "FaqServlet", urlPatterns = {"/faq"})
 public class FaqServlet extends HttpServlet {
 

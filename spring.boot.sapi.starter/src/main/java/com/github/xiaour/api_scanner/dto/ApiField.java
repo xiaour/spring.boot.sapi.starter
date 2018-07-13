@@ -1,10 +1,5 @@
 package com.github.xiaour.api_scanner.dto;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/5/31 18:21
- */
 public class ApiField {
 
     private String type;//字段类型

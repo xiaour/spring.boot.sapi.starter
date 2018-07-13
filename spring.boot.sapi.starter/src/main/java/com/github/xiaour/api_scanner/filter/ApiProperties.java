@@ -4,12 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/5/30 15:20
- */
-
 
 @Component
 @ConfigurationProperties(prefix="spring.spai")

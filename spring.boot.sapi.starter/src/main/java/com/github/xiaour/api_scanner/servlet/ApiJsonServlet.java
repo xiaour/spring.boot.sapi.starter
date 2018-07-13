@@ -3,7 +3,6 @@ package com.github.xiaour.api_scanner.servlet;
 import com.github.xiaour.api_scanner.dto.ApiInfo;
 import com.github.xiaour.api_scanner.filter.SapiFactoryAutoConfigure;
 import com.github.xiaour.api_scanner.util.SapiJsonUtil;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,11 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/6/4 10:07
- */
 @WebServlet(name = "ApiJsonServlet", urlPatterns = {"/apiList"})
 public class ApiJsonServlet extends HttpServlet {
 
@@ -38,7 +32,7 @@ public class ApiJsonServlet extends HttpServlet {
 
         Map<String,Object> map= new HashMap<>();
 
-        if(StringUtils.hasText(request.getParameter("pageNum"))){
+        if(request.getParameter("pageNum")!=null){
             pageNum=Integer.parseInt(request.getParameter("pageNum"));
             totalPage=getPageCount(pageSize,SapiFactoryAutoConfigure.simpleApiList.size());
             map.put("apiList",getListByPage(pageSize,pageNum,SapiFactoryAutoConfigure.simpleApiList));

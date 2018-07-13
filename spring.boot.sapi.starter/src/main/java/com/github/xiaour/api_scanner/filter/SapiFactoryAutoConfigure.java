@@ -4,7 +4,6 @@ import com.github.xiaour.api_scanner.dto.ApiField;
 import com.github.xiaour.api_scanner.dto.ApiInfo;
 import com.github.xiaour.api_scanner.logging.Log;
 import com.github.xiaour.api_scanner.logging.LogFactory;
-import com.github.xiaour.api_scanner.util.SapiJsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -26,12 +25,6 @@ import java.util.*;
 
 import static org.springframework.core.annotation.AnnotationAttributes.*;
 
-
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/5/30 15:02
- */
 @EnableConfigurationProperties({ApiProperties.class})
 public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
 
@@ -155,6 +148,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
     }
 
     private static boolean isJavaClass(Class<?> clz) {
+
         if(clz.getName().contains("multipart.MultipartFile")){
             return true;
         }
@@ -172,16 +166,19 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
         List<ApiField> apiFields=new ArrayList<>(length);
 
         for(int i=0;i<length;i++){
-            if(isJavaClass(paramsTypes[i])) {
-                String type = getTypeName(paramsTypes[i].toString());
-                ApiField apiField = new ApiField();
-                apiField.setName(paramNames[i]);
-                apiField.setType(type);
-                apiFields.add(apiField);
-            }else{
-                getCustomType(paramsTypes[i],apiFields);
+            if(!paramsTypes[i].getName().contains("javax.servlet.")) {
+                if (isJavaClass(paramsTypes[i])) {
+                    String type = getTypeName(paramsTypes[i].toString());
+                    ApiField apiField = new ApiField();
+                    apiField.setName(paramNames[i]);
+                    apiField.setType(type);
+                    apiFields.add(apiField);
+                } else {
+                    getCustomType(paramsTypes[i], apiFields);
+                }
             }
         }
+
         return apiFields;
     }
 
