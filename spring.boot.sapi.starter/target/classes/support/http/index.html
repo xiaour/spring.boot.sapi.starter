@@ -37,7 +37,6 @@
         <div>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">最新API</a></li>
-                <!--<li><a href="#">历史版本</a></li>-->
                 <li><a href="/faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
             </ul>
         </div>
@@ -49,7 +48,6 @@
         <div class="jumbotron" v-for="data in apiList">
             <div>
                 <div>接口URL： {{data.url}}</div>
-                <!--接口名称：<input type="text" class="input_st input_title" placeholder="请输入接口名称" v-model="data.name" maxlength="128">-->
                 <div class="btn-group pull-right">
                     <button type="button" class="btn btn-success" v-on:click="openDebug(data)" data-toggle="modal" data-target="#debugModal">
                         <span class="glyphicon glyphicon-play"></span>
@@ -69,39 +67,17 @@
             <tr>
                 <th style="width:50%">字段</th>
                 <th style="width:50%">类型</th>
-                <!--<th style="width:25%">是否必须</th>
-                <th style="width:25%">备注</th>-->
             </tr>
             </thead>
             <tbody>
             <tr v-for="field in data.fieldList">
                 <td>{{field.name}}</td>
                 <td>{{field.type}}</td>
-                <!--<td><input type="text" class="input_st" placeholder="Y / N" v-model="field.notNull"></td>-->
-                <!--<td><input type="text" class="input_st" placeholder="字段说明" v-model="field.remark"></td>-->
             </tr>
 
             </tbody>
         </table>
             </div>
-            <!--<div>接口说明：
-                <pre>
-                {{data.success}}
-                </pre>
-                </div>
-
-                <div>成功：
-                <pre>
-                {{data.success}}
-                </pre>
-                </div>
-
-                <div>其他：
-                <pre>
-                {{data.error}}
-                </pre>
-                </div>
-                -->
         </div>
         <nav>
             <ul class="pager">

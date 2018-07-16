@@ -4,7 +4,7 @@
 
 	<groupId>com.github.xiaour</groupId>
 	<artifactId>xiaour.springboot.sapi.starter</artifactId>
-	<version>1.0</version>
+	<version>V1.0-SNAPSHOT</version>
 	<build>
 		<pluginManagement>
 		<plugins>
@@ -107,7 +107,7 @@
 	</licenses>
 
 	<scm>
-		<tag>sapi</tag>
+		<tag>xiaour.springboot.sapi.starter-1.0</tag>
 		<url>git@github.com:xiaour/spring.boot.sapi.starter.git</url>
 		<connection>scm:git:git@github.com:xiaour/spring.boot.sapi.starter.git</connection>
 		<developerConnection>scm:git:git@github.com:xiaour/spring.boot.sapi.starter.git</developerConnection>

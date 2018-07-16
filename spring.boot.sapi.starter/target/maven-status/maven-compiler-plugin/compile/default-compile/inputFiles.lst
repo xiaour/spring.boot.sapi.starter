@@ -12,7 +12,6 @@
 /2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/dto/ApiInfo.java
 /2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/annotation/Sapi.java
 /2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/logging/JakartaCommonsLoggingImpl.java
-/2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/logging/Resources.java
 /2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/util/SapiJsonUtil.java
 /2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/util/Utils.java
 /2.workspace/sapi/spring.boot.sapi.starter/src/main/java/com/github/xiaour/api_scanner/logging/Log4jImpl.java
