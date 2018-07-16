@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SAPI. A simple api scanner</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="//cdn.bootcss.com/prettify/r298/prettify.min.js"></script>-->
+    <script src="//cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+    <script src="//cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <style>
+        .btn.active,.btn:active:focus,.btn:focus {outline:medium}
+         textarea,input,button{background:none;outline:medium;border:1px black solid;}
+        .input_st {border: 0px;border-bottom: 1px solid #CCCCCC;background-color:#F8F8F8;}
+        .input_title {min-width: 430px;}
+        .input_st:hover {border: 1px;border-bottom: 1px solid #CCCCCC;background-color:#F8F8F8;}
+        input::-webkit-input-placeholder{color:#DAA520;font-style: oblique;}
+        input::-moz-placeholder{   /* Mozilla Firefox 19+ */color:#DAA520;font-style: oblique;}
+        input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */color:#DAA520;font-style: oblique;}
+        input:-ms-input-placeholder{  /* Internet Explorer 10-11 */color:#DAA520;font-style: oblique;}
+        *{-webkit-border-radius: 0 !important;-moz-border-radius: 0 !important;border-radius: 0 !important;}
+        .form-control{border: 1px solid inherit;}
+         .btn{border: 1px solid inherit;}
+        .input-md {border: 1px solid #F8F8F8;}
+        .modal{color: #696969}
+        .jumbotron{background-color: #F8F8F8}
+    </style>
+</head>
+<body>
+​<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand " href="#"><span class="glyphicon glyphicon-leaf"></span>SAPI</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">最新API</a></li>
+                <!--<li><a href="#">历史版本</a></li>-->
+                <li><a href="/faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 35px;min-height: 400px;">
+    <div id="apiList" class="row" v-cloak>
+        <div class="jumbotron" v-for="data in apiList">
+            <div>
+                <div>接口URL： {{data.url}}</div>
+                <!--接口名称：<input type="text" class="input_st input_title" placeholder="请输入接口名称" v-model="data.name" maxlength="128">-->
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-success" v-on:click="openDebug(data)" data-toggle="modal" data-target="#debugModal">
+                        <span class="glyphicon glyphicon-play"></span>
+                    </button>
+                </div>
+            </div>
+
+            <span>
+                <br>
+                <div>请求类型：{{data.requestType}}</div>
+            </span>
+            <br>
+            <div class="table-responsive">
+            <table class="table table-bordered">
+            <caption>接口参数：</caption>
+            <thead>
+            <tr>
+                <th style="width:50%">字段</th>
+                <th style="width:50%">类型</th>
+                <!--<th style="width:25%">是否必须</th>
+                <th style="width:25%">备注</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="field in data.fieldList">
+                <td>{{field.name}}</td>
+                <td>{{field.type}}</td>
+                <!--<td><input type="text" class="input_st" placeholder="Y / N" v-model="field.notNull"></td>-->
+                <!--<td><input type="text" class="input_st" placeholder="字段说明" v-model="field.remark"></td>-->
+            </tr>
+
+            </tbody>
+        </table>
+            </div>
+            <!--<div>接口说明：
+                <pre>
+                {{data.success}}
+                </pre>
+                </div>
+
+                <div>成功：
+                <pre>
+                {{data.success}}
+                </pre>
+                </div>
+
+                <div>其他：
+                <pre>
+                {{data.error}}
+                </pre>
+                </div>
+                -->
+        </div>
+        <nav>
+            <ul class="pager">
+                <li><a v-on:click="jumpPage(-1)">上一页</a></li>
+                <li>{{currentPage}}/{{totalPage}}</li>
+                <li><a v-on:click="jumpPage(1)">下一页</a></li>
+            </ul>
+        </nav>
+
+    </div>
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="debugModal" v-cloak tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" style="width:65%;">
+            <form id="modal-form"  enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 10px">
+                    <button type="reset" class="close" data-dismiss="modal" aria-hidden="true" v-on:click="close">
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">API Debug</h4>
+                </div>
+                <div class="modal-body" style="padding: 5px">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default">{{requestType}}</button>
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a v-on:click="reqType('POST')">POST   </a></li>
+                                <li><a v-on:click="reqType('GET')">GET  </a></li>
+                                <li><a v-on:click="reqType('PUT')">PUT   </a></li>
+                                <li><a v-on:click="reqType('DELETE')">DELETE</a></li>
+                            </ul>
+                        </div><!-- /btn-group -->
+
+                        <input type="text" class="form-control" placeholder="Enter your Request URL" v-model="curl">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" v-on:click="doDebug(debugData)">Send</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th style="width:25%">Parameter</th>
+                            <th style="width:50%">Value</th>
+                            <th style="width:25%">Data Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="field in debugData.fieldList">
+                            <td>{{field.name}}</td>
+                            <td v-if="field.type!='MultipartFile'"><input type="text" class="form-control input-sm input-md" v-model="field.value" placeholder="Value"></td>
+                            <td v-else><input type="file" :name="field.name" ref="field.name" class="form-control input-sm input-md" v-model="field.value" @change="changeFile(field,$event)" ></td>
+                            <td>{{field.type}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!--<table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th colspan="2" style="text-align: center;">Headers</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="head in reqHeaders">
+                            <td><input type="text" class="form-control input-sm input-md" v-model="head.name" v-on:blur="addHeaders(head)" placeholder="Key"></td>
+                            <td><input type="text" class="form-control input-sm input-md" v-model="head.value" v-on:blur="addHeaders(head)" placeholder="Value"></td>
+                        </tr>
+                        </tbody>
+                    </table>-->
+                       <textarea class="form-control" cols="10" rows="8" placeholder="Result data in here." readonly>{{returnData}}</textarea>
+                    <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
+                    <span class="label label-warning" v-else-if="resultMsg!='200'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{returnData.status}} Error: {{returnData.error}}</span>
+
+                </div>
+
+            </div><!-- /.modal-content -->
+            </form>
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<footer class="footer" style="border-top: 1px solid #CCCCCC">
+    <div class="container text-center ">
+        <br>
+        <span>SAPI is a simple api starter for spring</span>
+        <h6> sapi V1.0 ©️ xiaour</h6>
+    </div>
+</footer>
+</body>
+<script type="text/javascript">
+    $(function(){
+        vm = new Vue({
+            el:'#apiList',
+            data:{apiList : [],
+                currentPage:1,
+                totalPage:1
+            }, mounted:function () {
+                this.getmc(1);
+            },
+
+            methods: {
+                openDebug: function (data) {
+                    var url = window.location.href;
+                    vm2.curl=url.split("/sapi")[0]+data.url;
+                    vm2.debugData=copy(data);
+                    for(var i=0;i<vm2.debugData.fieldList.length;i++){
+                       data.fieldList[i].value="";
+                    }
+                    vm2.returnData="";
+                    vm2.reqHeaders=[{name:null,value:null}]
+                },
+                jumpPage:function(condition){
+                    vm.currentPage=vm.currentPage+condition;
+                    console.log(vm.currentPage)
+                    if(vm.currentPage==0){
+                        vm.currentPage=vm.currentPage+1;
+                        alert("已经是第一页了！");
+                        return;
+                    }
+                    if(vm.currentPage>vm.totalPage){
+                        alert("已经是最后一页了！");
+                        vm.currentPage=vm.currentPage-1;
+                        return;
+                    }
+                    this.getmc(vm.currentPage);
+                },getmc:function (page){
+                    var url="apiList";
+                    if(page!=null){
+                        url+="?pageNum="+page
+                    }
+                    this.$http.get(url).then(function(res) {
+                            vm.apiList = res.data.apiList;
+                            vm.totalPage = res.data.totalPage>0?res.data.totalPage:1;
+                        },
+                        function (err){
+                            console.log(err);
+                        } );
+
+                }
+            }
+        });
+
+        vm2 = new Vue({
+            el:'#debugModal',
+            data:{debugData:"",
+                requestType:"POST",
+                returnData:"",
+                reqHeaders:[],
+                curl:"",
+                resultMsg:"200",
+                formData:new FormData()
+            }
+            ,
+            methods: {
+                doDebug: function (data) {
+
+                    vm2.returnData = "Requesting...";
+
+                    /*for (var i = 0; i < vm2.reqHeaders.length; i++) {
+                        console.log(vm2.reqHeaders[i]);
+                        Vue.http.headers.custom[vm2.reqHeaders[i].name]=vm2.reqHeaders[i].value;
+                    }*/
+
+
+                    if(vm2.requestType=="GET"){
+
+                        var tempUrl="";
+
+                        for(var i=0;i<data.fieldList.length;i++){
+                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined){
+                               tempUrl=tempUrl+data.fieldList[i].name+"="+data.fieldList[i].value+"&";
+                            }
+                        }
+
+                        this.$http.get(vm2.curl+"?"+tempUrl,vm2.reqHeaders)
+                            .then(function (res) {
+                                    vm2.returnData=res.bodyText;
+                                    vm2.resultMsg="200"
+                                },
+                                function (err){
+                                    vm2.returnData=err.body;
+                                    vm2.resultMsg=err.status;
+                                } );
+                    }
+
+                    if(vm2.requestType=="POST"){
+
+                        for(var i=0;i<data.fieldList.length;i++){
+                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined){
+                                vm2.formData.delete(data.fieldList[i].name);
+                                vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                            }
+                        }
+
+                        this.$http.post(vm2.curl,vm2.formData,vm2.reqHeaders)
+                            .then(function (res) {
+                                    vm2.returnData=res.bodyText;
+                                    vm2.resultMsg="200"
+                                },
+                                function (err){
+                                    vm2.returnData=err.body;
+                                    vm2.resultMsg=err.status;
+                                } );
+
+                    }
+                },
+                reqType:function (type) {
+                    vm2.requestType=type;
+                },
+                addHeaders:function (data) {
+                    var header=vm2.reqHeaders;
+                    var flag=1;
+                    for(var i=0;i<header.length;i++){
+                        if(header[i].name==undefined||header[i].name=="") {
+                            flag=2
+                        }
+                    }
+                    //如果Key都有值，则添加一行新的
+                    if(flag==1){
+                        vm2.reqHeaders.push({name:null,value:null});
+                    }
+
+                },close:function () {
+                    vm2.debugData="";
+                },
+                changeFile:function(data,event){
+                    vm2.formData.delete(data.name);
+                    var deviceFile = event.target.files;
+                    for(var i=0;i<deviceFile.length;i++){
+                        vm2.formData.append(data.name, deviceFile[i]);
+                    }
+                }
+                
+            }
+        });
+
+    });
+
+    function copy(obj){
+        var newobj = {};
+        for ( var attr in obj) {
+            newobj[attr] = obj[attr];
+        }
+        return newobj;
+    }
+
+</script>
+</html>
