@@ -1,8 +1,0 @@
-com/github/xiaour/api_scanner/filter/SapiFactoryAutoConfigure.class
-com/github/xiaour/api_scanner/dto/ApiInfo.class
-com/github/xiaour/api_scanner/servlet/ApiServlet.class
-com/github/xiaour/api_scanner/exception/SimpleApiException.class
-com/github/xiaour/api_scanner/dto/ApiField.class
-com/github/xiaour/api_scanner/logging/Log.class
-com/github/xiaour/api_scanner/filter/ApiProperties.class
-com/github/xiaour/api_scanner/servlet/FaqServlet.class
