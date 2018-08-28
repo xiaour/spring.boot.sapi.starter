@@ -16,7 +16,6 @@
 
 ```java
 @Sapi(controllers = {"com.example.demo.ctrl","com.example.demo.ctrl2"})
-@ServletComponentScan(basePackages = {"com.github.xiaour.api_scanner.servlet"})
 @ComponentScan
 @SpringBootApplication
 public class DemoApplication {
@@ -34,7 +33,7 @@ public class DemoApplication {
 
 ## 版本功能
 
-当前为1.0版本，实现了输出接口URL和参数；
+当前为1.2版本，实现了输出接口URL和参数；
 2.0版本将实现添加接口说明、历史版本接口管理、接口测试页面
 -------------------------------------------------------------
 更新日志
@@ -46,3 +45,5 @@ public class DemoApplication {
 20180702.新增支持自定义请求Header。
 
 20180710.新增了接口分页。
+
+20180828.优化了返回结果格式化的问题。
