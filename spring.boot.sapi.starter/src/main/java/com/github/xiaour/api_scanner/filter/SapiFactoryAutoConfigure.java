@@ -43,7 +43,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
 
         LOG.debug("The springboot sapi init.");
 
-        Set<Class> classes= new HashSet<>();
+        Set<Class> classes= new HashSet<Class>();
         try {
 
             if(properties.getPack()==null){
@@ -54,7 +54,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
                     classes.addAll(getClassName(packageName));
             }
 
-            List<ApiInfo> list=new ArrayList<>();
+            List<ApiInfo> list=new ArrayList<ApiInfo>();
 
             for(Class c:classes){
                 RequestMapping requestMapping= (RequestMapping) c.getAnnotation(RequestMapping.class);
@@ -77,10 +77,14 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
     }
 
     private static Set<Class> getClassName(String filePath) throws ClassNotFoundException {
-        Set<Class> classes= new HashSet<>();
+        Set<Class> classes= new HashSet<Class>();
         filePath = ClassLoader.getSystemResource("").getPath() + filePath.replace(".", "/");
         File file = new File(filePath);
+
         File[] childFiles = file.listFiles();
+        if(childFiles==null){
+            throw new ClassNotFoundException(filePath+" is not found,Please check the aplication's annotation in @Sapi(controllers) ");
+        }
         for (File childFile : childFiles) {
             String childFilePath = childFile.getPath();
             childFilePath = childFilePath.substring(childFilePath.indexOf("/classes") + 9,childFilePath.length());
@@ -97,7 +101,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
 
     private List<ApiInfo> getReflectAllMethod( Class <?> mLocalClass,String [] routes){
         ParameterNameDiscoverer pnd = new LocalVariableTableParameterNameDiscoverer();
-        List<ApiInfo> list= new ArrayList<>();
+        List<ApiInfo> list= new ArrayList<ApiInfo>();
 
         try {
             do{
@@ -118,6 +122,9 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
                                     RequestMethod[] me = method.getAnnotation(RequestMapping.class).method();
                                     for (RequestMethod rm : me) {
                                         apiInfo.setRequestType(apiInfo.getRequestType() != "" ? apiInfo.getRequestType() + "," + rm : rm.name());
+                                    }
+                                    if(apiInfo.getRequestType()==""){
+                                        apiInfo.setRequestType("POST,GET,PUT,DELETE");
                                     }
                                     apiInfo.setUrl(route + "/" + mappingName);
                                     apiInfo.setUrl(apiInfo.getUrl().replaceAll("//","/"));
@@ -163,7 +170,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
      * @return
      */
     private static List<ApiField> getDefaultType(int length,Class<?> paramsTypes[],String[] paramNames){
-        List<ApiField> apiFields=new ArrayList<>(length);
+        List<ApiField> apiFields=new ArrayList<ApiField>(length);
 
         for(int i=0;i<length;i++){
             if(!paramsTypes[i].getName().contains("javax.servlet.")) {

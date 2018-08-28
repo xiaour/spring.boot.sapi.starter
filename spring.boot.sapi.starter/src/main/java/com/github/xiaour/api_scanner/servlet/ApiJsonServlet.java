@@ -30,7 +30,7 @@ public class ApiJsonServlet extends HttpServlet {
         Integer pageNum;
         int totalPage=-1;
 
-        Map<String,Object> map= new HashMap<>();
+        Map<String,Object> map= new HashMap<String,Object>();
 
         if(request.getParameter("pageNum")!=null){
             pageNum=Integer.parseInt(request.getParameter("pageNum"));

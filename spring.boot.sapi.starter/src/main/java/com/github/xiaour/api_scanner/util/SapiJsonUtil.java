@@ -364,7 +364,7 @@ public class SapiJsonUtil {
     public static List<Map<String,Object>> jsonToArray(String jsonStr){
         jsonStr=trimFirstAndLastChar(jsonStr,"[");
         jsonStr=trimFirstAndLastChar(jsonStr,"]");
-        List<Map<String,Object>> dataList= new ArrayList<>();
+        List<Map<String,Object>> dataList= new ArrayList<Map<String,Object>>();
         String [] jsonList=jsonStr.split(",\\{");
         for(String s:jsonList){
             dataList.add(stringToMap(s));
@@ -374,7 +374,7 @@ public class SapiJsonUtil {
 
     private  static Map<String,Object> stringToMap(String jsonObj){
         //        jsonStr=jsonStr.replaceAll("\\[","").replaceAll("\\]","");
-        Map<String,Object> map= new HashMap<>();
+        Map<String,Object> map= new HashMap<String,Object>();
         if(jsonObj.contains("[{")) {
             jsonObj = jsonObj.replaceAll("\\{", "").replaceAll("\\}", "");
         }

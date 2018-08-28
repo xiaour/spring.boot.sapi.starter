@@ -6,12 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="demo" />
         <module name="xiaour.springboot.sapi.starter" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="demo" target="1.8" />
       <module name="spring.boot.sapi.starter" target="1.8" />
-      <module name="xiaour.springboot.sapi.starter" target="1.8" />
+      <module name="xiaour.springboot.sapi.starter" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

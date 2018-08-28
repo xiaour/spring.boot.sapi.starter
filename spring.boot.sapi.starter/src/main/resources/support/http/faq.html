@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title>SAPI. A simple api scanner</title>
     <meta charset="utf-8">
@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!--<script src="//cdn.bootcss.com/prettify/r298/prettify.min.js"></script>-->
     <script src="//cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
     <script src="//cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
     <style>
@@ -36,7 +35,7 @@
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li><a href="/sapi">最新API</a></li>
+                <li><a href="/sapi">API</a></li>
                 <!--<li><a href="#">历史版本</a></li>-->
                 <li class="active"><a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></li>
             </ul>
@@ -47,25 +46,58 @@
 <div class="container" style="padding-top: 35px;min-height: 400px;">
     <div id="apiList" class="row" v-cloak>
         <div class="jumbotron" v-for="data in apiDataList">
-            <p>SAPI是什么？</p>
-            <hr>
-            <span>SAPI是一个基于Spring的帮助开发人员扫描Restful接口的小工具，只需要一行配置，就可以看到相应的接口以及参数。</span>
 
-            <br><br><br>
-            <p>SAPI如何测试？</p>
-            <hr>
-            <span>打开了http://127.0.0.1:{your.port}/{your.contextPath}/spai后，在每个接口右侧页面上可以看到一个绿色的三角按钮。对相关参数进行赋值后点击"Send"就可以看到相关的输出结果了。</span>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">SAPI是什么？</h3>
+                </div>
+                <div class="panel-body">
+                    SAPI是一个基于Spring的帮助开发人员扫描Restful接口的小工具，只需要一行配置，就可以看到相应的接口以及参数。
+                </div>
+            </div>
 
-            <br><br><br>
-            <p>如何获取源码or提Issues？</p>
-            <hr>
-            <span>Sapi是一个开源的组件，任何人都可以在Apache License 2.0的规范下修改源码。https://github.com/xiaour/spring.boot.sapi.starter,同时也欢迎各位开发者Star ^_^</span>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">SAPI如何测试？</h3>
+                </div>
+                <div class="panel-body">
+                    打开了http://127.0.0.1:{your.port}/{your.contextPath}/spai后，在每个接口右侧页面上可以看到一个绿色的三角按钮(<button type="button" class="btn btn-success btn-xs">
+                    <span class="glyphicon glyphicon-play"></span>
+                </button>)。对相关参数进行赋值后点击<button type="button" class="btn btn-primary btn-xs">Send</button>就可以看到相关的输出结果了。
+                </div>
+            </div>
 
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">为何接口扫描出来了，但是测试时提示404？</h3>
+                </div>
+                <div class="panel-body">
+                    很可能您使用了@Controller，如果不需要使用Thymeleaf等系列模板，建议使用@RestController进行测试。
+                </div>
+            </div>
 
-            <br><br><br>
-            <p>开发者微信</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">如何获取源码?</h3>
+                </div>
+                <div class="panel-body">
+                    Sapi是一个开源的组件，任何人都可以在Apache License 2.0的规范下修改源码。https://github.com/xiaour/spring.boot.sapi.starter,同时也欢迎各位开发者Star ^_^
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">提Bug或issues</h3>
+                </div>
+                <div class="panel-body">
+                   请<a href="https://github.com/xiaour/spring.boot.sapi.starter/issues">打开链接反馈问题</a>。
+                </div>
+            </div>
+
+            <br>
+            <p>开发者微信&QQ</p>
             <hr>
-            <span>欢迎加微信 Ghost-999 共同进步！</span>
+            <span>欢迎加微信 <kbd>Ghost-999</kbd>或QQ：<kbd>849093078</kbd></span>
 
         </div>
 
@@ -79,7 +111,7 @@
     <div class="container text-center ">
         <br>
         <span>SAPI is a simple api starter for spring</span>
-        <h6> sapi V1.0 ©️ xiaour</h6>
+        <h6> SAPI V1.2 ©️ xiaour</h6>
     </div>
 </footer>
 </body>

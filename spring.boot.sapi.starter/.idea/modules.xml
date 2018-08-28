@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../demo/demo.iml" filepath="$PROJECT_DIR$/../demo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/xiaour.springboot.sapi.starter.iml" filepath="$PROJECT_DIR$/xiaour.springboot.sapi.starter.iml" />
     </modules>
   </component>
