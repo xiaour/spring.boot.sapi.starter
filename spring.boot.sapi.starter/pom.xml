@@ -4,23 +4,32 @@
 
 	<groupId>com.github.xiaour</groupId>
 	<artifactId>xiaour.springboot.sapi.starter</artifactId>
-	<version>1.2</version>
-    <build>
+	<version>1.0</version>
+    <name>com.github.xiaour.sapi.starter</name>
+    <url>https://github.com/xiaour/spring.boot.sapi.starter</url>
+    <description>Simple API for Spring Boot</description>
+    <packaging>pom</packaging>
+
+    <!--<build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
-    </build>
-    <packaging>jar</packaging>
-	<name>xiaour.springboot.sapi.starter</name>
-	<url>https://github.com/xiaour/spring.boot.sapi.starter</url>
-	<description>Simple API for Spring Boot</description>
+    </build>-->
+    <!--<packaging>jar</packaging>-->
+
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
 	<licenses>
 		<license>
@@ -31,18 +40,19 @@
 	</licenses>
 
 	<scm>
-		<tag>SAPI</tag>
+		<tag>master</tag>
 		<url>git@github.com:xiaour/spring.boot.sapi.starter.git</url>
 		<connection>scm:git:git@github.com:xiaour/spring.boot.sapi.starter.git</connection>
 		<developerConnection>scm:git:git@github.com:xiaour/spring.boot.sapi.starter.git</developerConnection>
 	</scm>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-
+    <developers>
+        <developer>
+            <name>xiaour</name>
+            <email>cityuu@163.com</email>
+            <url>https://xiaour.github.io</url>
+        </developer>
+    </developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,124 +62,50 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>snapshots</id>
 
             <distributionManagement>
                 <repository>
                     <id>release</id>
+                    <name>Nexus Release Repository</name>
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
                 </repository>
                 <snapshotRepository>
                     <id>snapshots</id>
+                    <name>Nexus Snapshot Repository</name>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
             </distributionManagement>
 
             <build>
-                <!--<resources>
-                    <resource>
-                        <directory>src/main/apidocs</directory>
-                        <includes>
-                            <include>*</include>                        &lt;!&ndash;排除一些不需要打包的java文件，此处是排除aboutjar包下的所有java文件&ndash;&gt;
-                        </includes>
-                    </resource>
-                </resources>-->
+                <defaultGoal>compile</defaultGoal>
                 <pluginManagement>
                 <plugins>
 
-
-                    <!--                   <plugin>
-                                           <groupId>org.apache.maven.plugins</groupId>
-                                           <artifactId>maven-compiler-plugin</artifactId>
-                                           <configuration>
-                                               <source>1.8</source>
-                                               <target>1.8</target>
-                                           </configuration>
-                                       </plugin>
-
-
-                                       <plugin>
-                                           <artifactId>maven-source-plugin</artifactId>
-                                           <executions>
-                                               <execution>
-                                                   <goals>
-                                                       <goal>jar-no-fork</goal>
-                                                   </goals>
-                                               </execution>
-                                           </executions>
-                                       </plugin>
-
-                                       <plugin>
-                                           <groupId>org.apache.maven.plugins</groupId>
-                                           <artifactId>maven-release-plugin</artifactId>
-                                           <version>2.5</version>
-                                           <configuration>
-                                               <autoVersionSubmodules>true</autoVersionSubmodules>
-                                               <useReleaseProfile>false</useReleaseProfile>
-                                               <releaseProfiles>release</releaseProfiles>
-                                               <checkModificationExcludeList>*.xml</checkModificationExcludeList>
-                                               <goals>deploy</goals>
-                                           </configuration>
-                                       </plugin>
-
-                                       <plugin>
-                                           <groupId>org.sonatype.plugins</groupId>
-                                           <artifactId>nexus-staging-maven-plugin</artifactId>
-                                           <version>1.6.3</version>
-                                           <extensions>true</extensions>
-                                           <configuration>
-                                               <serverId>ossrh</serverId>
-                                               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                                               <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                                           </configuration>
-                                       </plugin>
-                                       &lt;!&ndash; GPG &ndash;&gt;
-
-                                       <plugin>
-                                           <groupId>org.apache.maven.plugins</groupId>
-                                           <artifactId>maven-gpg-plugin</artifactId>
-                                           <version>1.5</version>
-                                           <executions>
-                                               <execution>
-                                                   <phase>verify</phase>
-                                                   <goals>
-                                                       <goal>sign</goal>
-                                                   </goals>
-                                               </execution>
-                                           </executions>
-                                       </plugin>
-
-                                       &lt;!&ndash; Javadoc &ndash;&gt;
-                                       <plugin>
-                                           <groupId>org.apache.maven.plugins</groupId>
-                                           <artifactId>maven-javadoc-plugin</artifactId>
-                                           <version>2.9.1</version>
-                                           <executions>
-                                               <execution>
-                                                   <id>attach-sources</id>
-                                                   <phase>verify</phase>
-                                                   <goals>
-                                                       <goal>jar</goal>
-                                                   </goals>
-                                               </execution>
-                                           </executions>
-                                       </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.3</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>release</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
 
 
-
-                                       <plugin>
-                                           <artifactId>maven-deploy-plugin</artifactId>
-                                           <executions>
-                                               <execution>
-                                                   <id>deploy</id>
-                                                   <phase>deploy</phase>
-                                                   <goals>
-                                                       <goal>deploy</goal>
-                                                   </goals>
-                                               </execution>
-                                           </executions>
-                                       </plugin>-->
-
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
                     <!--指定编译器版本-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -205,12 +141,19 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <!-- 解决 java8 下发布到 maven 中心库时，生成 doc 的异常 -->
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <outputDirectory>${basedir}</outputDirectory>
+                            <reportOutputDirectory>${basedir}</reportOutputDirectory>
+                        </configuration>
                     </plugin>
                     <!--gpg加密-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>1.5</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -241,13 +184,7 @@
         </profile>
 	</profiles>
 
-	<developers>
-		<developer>
-			<name>xiaour</name>
-			<email>cityuu@163.com</email>
-			<url>https://xiaour.github.io</url>
-		</developer>
-	</developers>
+
 
 
 	<dependencyManagement>
@@ -290,48 +227,7 @@
 		</dependency>
 
 	</dependencies>
-<!--
-	<build>
-		<pluginManagement>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<attach>true</attach>
-				</configuration>
-			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<attach>true</attach>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-			</plugin>
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-			</plugin>
-
-		</plugins>
-		</pluginManagement>
-	</build>-->
 
 
 </project>
