@@ -10,11 +10,10 @@
   <version>1.1</version>
 </dependency>
 ```
-2.启动类加入注解Sapi和ServletComponentScan
+2.启动类加入注解Sapi，controllers属性可以声明多个，如controllers = {"com.example.demo.ctrl","com.example.demo2.ctrl"}
 
 ```java
-@Sapi(controllers = {"com.example.demo.ctrl","com.example.demo.ctrl2"})
-@ComponentScan
+@Sapi(controllers = {"com.example.demo.ctrl"})
 @SpringBootApplication
 public class DemoApplication {
 
