@@ -5,11 +5,9 @@
 1.下载并打包Jar配置好POM
 ```xml
 <dependency>
-   <groupId>com.github.xiaour</groupId>
-   <artifactId>xiaour.springboot.sapi.starter</artifactId>
-   <version>1.2</version>
-   <scope>system</scope>
-   <systemPath>${project.basedir}/libs/xiaour.springboot.sapi.starter-1.2.jar</systemPath>
+  <groupId>com.github.xiaour</groupId>
+  <artifactId>xiaour.springboot.sapi.starter</artifactId>
+  <version>1.1</version>
 </dependency>
 ```
 2.启动类加入注解Sapi和ServletComponentScan
