@@ -4,26 +4,11 @@
 
 	<groupId>com.github.xiaour</groupId>
 	<artifactId>xiaour.springboot.sapi.starter</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.2</version>
     <name>com.github.xiaour.sapi.starter</name>
+    <packaging>jar</packaging>
     <url>https://github.com/xiaour/spring.boot.sapi.starter</url>
     <description>Simple API for Spring Boot</description>
-    <packaging>pom</packaging>
-
-    <!--<build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>-->
-    <!--<packaging>jar</packaging>-->
-
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -62,8 +47,7 @@
 
     <profiles>
         <profile>
-            <id>snapshots</id>
-
+            <id>release</id>
             <distributionManagement>
                 <repository>
                     <id>release</id>
@@ -77,109 +61,97 @@
                 </snapshotRepository>
             </distributionManagement>
 
-            <build>
-                <defaultGoal>compile</defaultGoal>
-                <pluginManagement>
-                <plugins>
+			<!--   <build>
+                 <defaultGoal>compile</defaultGoal>
+                 <pluginManagement>
+                 <plugins>
 
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.3</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>release</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
+                   <plugin>
+                         <groupId>org.sonatype.plugins</groupId>
+                         <artifactId>nexus-staging-maven-plugin</artifactId>
+                         <version>1.6.3</version>
+                         <extensions>true</extensions>
+                         <configuration>
+                             <serverId>release</serverId>
+                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                         </configuration>
+                     </plugin>
 
 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5</version>
-                        <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <useReleaseProfile>false</useReleaseProfile>
-                            <releaseProfiles>release</releaseProfiles>
-                            <goals>deploy</goals>
-                        </configuration>
-                    </plugin>
-                    <!--指定编译器版本-->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>${java.version}</source>
-                            <target>${java.version}</target>
-                        </configuration>
-                    </plugin>
-                    <!--打包源码-->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!--打包文档注释-->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.3</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <!-- 解决 java8 下发布到 maven 中心库时，生成 doc 的异常 -->
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <outputDirectory>${basedir}</outputDirectory>
-                            <reportOutputDirectory>${basedir}</reportOutputDirectory>
-                        </configuration>
-                    </plugin>
-                    <!--gpg加密-->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!--指定上传仓库-->
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.3</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>release</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-release-plugin</artifactId>
+                         <version>2.5</version>
+                         <configuration>
+                             <autoVersionSubmodules>true</autoVersionSubmodules>
+                             <useReleaseProfile>false</useReleaseProfile>
+                             <releaseProfiles>release</releaseProfiles>
+                             <goals>deploy</goals>
+                         </configuration>
+                     </plugin>
+                     &lt;!&ndash;指定编译器版本&ndash;&gt;
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-compiler-plugin</artifactId>
+                         <configuration>
+                             <source>${java.version}</source>
+                             <target>${java.version}</target>
+                         </configuration>
+                     </plugin>
+                     &lt;!&ndash;打包源码&ndash;&gt;
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-source-plugin</artifactId>
+                         <version>3.0.1</version>
+                         <executions>
+                             <execution>
+                                 <id>attach-sources</id>
+                                 <goals>
+                                     <goal>jar-no-fork</goal>
+                                 </goals>
+                             </execution>
+                         </executions>
+                     </plugin>
+                     &lt;!&ndash;打包文档注释&ndash;&gt;
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-javadoc-plugin</artifactId>
+                         <version>3.0.0</version>
+                         <executions>
+                             <execution>
+                                 <id>attach-javadocs</id>
+                                 <goals>
+                                     <goal>jar</goal>
+                                 </goals>
+                             </execution>
+                         </executions>
+                         <configuration>
+                             <encoding>${project.build.sourceEncoding}</encoding>
+                             <outputDirectory>${basedir}</outputDirectory>
+                             <reportOutputDirectory>${basedir}</reportOutputDirectory>
+                         </configuration>
+                     </plugin>
+                     &lt;!&ndash;gpg加密&ndash;&gt;
+                     <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+                         <artifactId>maven-gpg-plugin</artifactId>
+                         <version>1.5</version>
+                         <executions>
+                             <execution>
+                                 <id>sign-artifacts</id>
+                                 <phase>verify</phase>
+                                 <goals>
+                                     <goal>sign</goal>
+                                 </goals>
+                             </execution>
+                         </executions>
+                     </plugin>
+
                 </plugins>
                 </pluginManagement>
 
-            </build>
+            </build>-->
 
         </profile>
 	</profiles>
