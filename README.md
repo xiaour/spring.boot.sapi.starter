@@ -10,7 +10,8 @@
   <version>1.1</version>
 </dependency>
 ```
-2.启动类加入注解Sapi，controllers属性可以声明多个，如controllers = {"com.example.demo.ctrl","com.example.demo2.ctrl"}
+2.启动类加入注解Sapi.
+controllers属性可以声明多个，如controllers = {"com.example.demo.ctrl","com.example.demo2.ctrl"},controllers的路径对应项目中controller所在的路径。
 
 ```java
 @Sapi(controllers = {"com.example.demo.ctrl"})
