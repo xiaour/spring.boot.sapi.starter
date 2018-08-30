@@ -4,11 +4,26 @@
 
 	<groupId>com.github.xiaour</groupId>
 	<artifactId>xiaour.springboot.sapi.starter</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
     <name>com.github.xiaour.sapi.starter</name>
     <url>https://github.com/xiaour/spring.boot.sapi.starter</url>
     <description>Simple API for Spring Boot</description>
-    <packaging> jar</packaging>
+    <packaging>pom</packaging>
+
+    <!--<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>-->
+    <!--<packaging>jar</packaging>-->
+
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -47,7 +62,8 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>snapshots</id>
+
             <distributionManagement>
                 <repository>
                     <id>release</id>
