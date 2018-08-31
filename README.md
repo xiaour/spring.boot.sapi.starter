@@ -7,11 +7,11 @@
 <dependency>
   <groupId>com.github.xiaour</groupId>
   <artifactId>xiaour.springboot.sapi.starter</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
 </dependency>
 ```
 2.启动类加入注解Sapi.
-controllers属性可以声明多个，如controllers = {"com.example.demo.ctrl","com.example.demo2.ctrl"},controllers的路径对应项目中controller所在的路径。
+controllers属性可以声明多个，如controllers = {"com.example.demo.ctrl","com.example.demo2.ctrl"},controllers的路径对应项目中controller所在的路径。enable是SAPI的开关，如果需要上生产环境只需要enable=false就可以了，这样避免在生产暴露接口。
 
 ```java
 @Sapi(controllers = {"com.example.demo.ctrl"})
