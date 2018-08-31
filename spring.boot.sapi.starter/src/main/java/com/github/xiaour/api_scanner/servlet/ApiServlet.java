@@ -1,9 +1,11 @@
 package com.github.xiaour.api_scanner.servlet;
 
+import com.github.xiaour.api_scanner.exception.SimpleApiException;
 import com.github.xiaour.api_scanner.filter.SapiFactoryAutoConfigure;
 import com.github.xiaour.api_scanner.logging.Log;
 import com.github.xiaour.api_scanner.logging.LogFactory;
 import com.github.xiaour.api_scanner.util.Utils;
+import org.springframework.beans.NotWritablePropertyException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,9 +28,7 @@ public class ApiServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         String contextPath = request.getContextPath();
         String servletPath = request.getServletPath();
@@ -46,11 +46,14 @@ public class ApiServlet extends HttpServlet {
             path="/index.html";
         }
 
+        if(!SapiFactoryAutoConfigure.enable){
+            response.sendError(404,"SAPI is not enable.");
+        }
+
         try {
             returnResourceFile(path, uri, response);
         } catch (ServletException e) {
             LOG.error("Sapi init exception:",e);
-
         }
     }
 

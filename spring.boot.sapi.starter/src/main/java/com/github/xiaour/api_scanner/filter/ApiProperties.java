@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@ConfigurationProperties(prefix="spring.spai")
+@ConfigurationProperties(prefix="spring.sapi")
 public class ApiProperties{
 
     private String [] pack;//包路径

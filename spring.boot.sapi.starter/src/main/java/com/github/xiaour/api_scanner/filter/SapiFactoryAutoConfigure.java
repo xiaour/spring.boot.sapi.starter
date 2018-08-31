@@ -14,8 +14,8 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.File;
 
 import java.lang.reflect.Field;
@@ -33,9 +33,36 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
     @Autowired
     public ApiProperties properties;
 
+    public static boolean enable;
+
     public static List<ApiInfo> simpleApiList;
 
+    private static String allRequestType="POST,GET,PUT,DELETE,PATCH";
+
     private static String annotationName="com.github.xiaour.api_scanner.annotation.Sapi";
+
+    static class OtherMapping{
+        private String [] mappingName;
+
+        private String requestType;
+
+        public String[] getMappingName() {
+            return mappingName;
+        }
+
+        public void setMappingName(String[] mappingName) {
+            this.mappingName = mappingName;
+        }
+
+        public String getRequestType() {
+            return requestType;
+        }
+
+        public void setRequestType(String requestType) {
+            this.requestType = requestType;
+        }
+    }
+
 
     @Bean
     public String init(){
@@ -77,6 +104,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
     }
 
     private static Set<Class> getClassName(String filePath) throws ClassNotFoundException {
+        String flag=File.separator;
         Set<Class> classes= new HashSet<Class>();
         filePath = ClassLoader.getSystemResource("").getPath() + filePath.replace(".", "/");
         File file = new File(filePath);
@@ -87,9 +115,9 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
         }
         for (File childFile : childFiles) {
             String childFilePath = childFile.getPath();
-            childFilePath = childFilePath.substring(childFilePath.indexOf("/classes") + 9,childFilePath.length());
+            childFilePath = childFilePath.substring(childFilePath.indexOf(flag+"classes") + 9,childFilePath.length());
             childFilePath=childFilePath.replaceAll(".class","");
-            childFilePath=childFilePath.replaceAll("/",".");
+            childFilePath=childFilePath.replaceAll(flag,".");
             classes.add(Class.forName(childFilePath));
         }
 
@@ -106,38 +134,52 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
         try {
             do{
                 Method methods[] = mLocalClass.getDeclaredMethods(); // 取得全部的方法
+
                 for (Method method:methods) {
+
+                    Class<?> paramsTypes[] = method.getParameterTypes();
+
+                    int length = paramsTypes.length;
+
 
                     for(String route:routes){
                         String mod = Modifier.toString(method.getModifiers());
-                        RequestMapping requestMapping=method.getAnnotation(RequestMapping.class);
+
                         String metName = method.getName();
-                        if(requestMapping!=null){
-                            for(String mappingName:requestMapping.value()) {
 
-                                ApiInfo apiInfo = new ApiInfo();
+                        RequestMapping requestMapping=method.getAnnotation(RequestMapping.class);
 
-                                if (mod.equals("public") && !metName.equals("toString") && !metName.equals("equals")) {
+                        if (mod.equals("public") && !metName.equals("toString") && !metName.equals("equals")) {
 
-                                    RequestMethod[] me = method.getAnnotation(RequestMapping.class).method();
-                                    for (RequestMethod rm : me) {
-                                        apiInfo.setRequestType(apiInfo.getRequestType() != "" ? apiInfo.getRequestType() + "," + rm : rm.name());
+                            if(requestMapping!=null){
+
+                                for(String mappingName:requestMapping.value()) {
+
+                                        String requestInfo="";
+
+                                        RequestMethod[] me = method.getAnnotation(RequestMapping.class).method();
+
+                                        for (RequestMethod rm : me) {
+                                            requestInfo=rm.name();
+                                        }
+                                        if(requestInfo==""){
+                                            requestInfo=allRequestType;
+                                        }
+                                        ApiInfo apiInfo =getApiInfo(method,route,mappingName,pnd,length,paramsTypes,requestInfo);
+                                        list.add(apiInfo);
                                     }
-                                    if(apiInfo.getRequestType()==""){
-                                        apiInfo.setRequestType("POST,GET,PUT,DELETE");
+                            }else{
+
+                                OtherMapping otherMapping=getMappingType(method);
+
+                                if(otherMapping!=null){
+
+                                    for(String mappingName:otherMapping.getMappingName()) {
+
+                                        ApiInfo apiInfo=getApiInfo(method,route,mappingName,pnd,length,paramsTypes,otherMapping.getRequestType());
+
+                                        list.add(apiInfo);
                                     }
-                                    apiInfo.setUrl(route + "/" + mappingName);
-                                    apiInfo.setUrl(apiInfo.getUrl().replaceAll("//","/"));
-                                    Class<?> paramsTypes[] = method.getParameterTypes();
-                                    String[] paramNames = pnd.getParameterNames(method);
-
-                                    int length = paramsTypes.length;
-
-                                    List<ApiField> apiFields = getDefaultType(length, paramsTypes, paramNames);
-
-                                    apiInfo.setFieldList(apiFields);
-                                    apiInfo.setId();
-                                    list.add(apiInfo);
                                 }
                             }
 
@@ -152,6 +194,69 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
             LOG.error("Sapi init exception:",e);
         }
         return list;
+    }
+
+    private static ApiInfo getApiInfo(Method method,String route,String mappingName,ParameterNameDiscoverer pnd,int length,Class<?> paramsTypes[],String requestType){
+        ApiInfo apiInfo = new ApiInfo();
+
+        if(requestType!=null) {
+            apiInfo.setRequestType(requestType);
+        }
+
+        apiInfo.setUrl(route + "/" + mappingName);
+
+        apiInfo.setUrl(apiInfo.getUrl().replaceAll("//","/"));
+
+        String[] paramNames = pnd.getParameterNames(method);
+
+        List<ApiField> apiFields = getDefaultType(length, paramsTypes, paramNames);
+
+        apiInfo.setFieldList(apiFields);
+
+        apiInfo.setId();
+
+        return apiInfo;
+    }
+
+    /**
+     * 获取请求方式
+     * @return
+     */
+    private static OtherMapping getMappingType(Method method){
+        OtherMapping otherMapping=new OtherMapping();
+        //因为方法上可能有多个注解，所以只能通过需要的注解进行判断
+        PostMapping postMapping = method.getAnnotation(PostMapping.class);
+        GetMapping getMapping = method.getAnnotation(GetMapping.class);
+        DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
+        PatchMapping  patchMapping = method.getAnnotation(PatchMapping.class);
+        PutMapping  putMapping = method.getAnnotation(PutMapping.class);
+
+        if(postMapping!=null){
+            otherMapping.setMappingName(postMapping.value());
+            otherMapping.setRequestType(RequestMethod.POST.name());
+            return otherMapping;
+        }
+        if(getMapping!=null){
+            otherMapping.setMappingName(getMapping.value());
+            otherMapping.setRequestType(RequestMethod.GET.name());
+            return otherMapping;
+        }
+        if(deleteMapping!=null){
+            otherMapping.setMappingName(deleteMapping.value());
+            otherMapping.setRequestType(RequestMethod.DELETE.name());
+            return otherMapping;
+        }
+        if(patchMapping!=null){
+            otherMapping.setMappingName(patchMapping.value());
+            otherMapping.setRequestType(RequestMethod.PATCH.name());
+            return otherMapping;
+        }
+        if(putMapping!=null){
+            otherMapping.setMappingName(putMapping.value());
+            otherMapping.setRequestType(RequestMethod.PUT.name());
+            return otherMapping;
+        }
+        return null;
     }
 
     private static boolean isJavaClass(Class<?> clz) {
@@ -224,12 +329,16 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar {
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
         AnnotationAttributes attributes = fromMap(annotationMetadata.getAnnotationAttributes(annotationName));
         String[] values = attributes.getStringArray("controllers");
-        if(values!=null) {
-            properties=new ApiProperties();
-            properties.setPack(values);
-            init();
-        }else {
-            LOG.error("Sapi annotations not config,Please Configured the Application class @Spai(controllers={\"your.controller.path1\",\"...\"})");
+
+        enable=attributes.getBoolean("enable");
+        if(enable){
+            if(values!=null) {
+                properties=new ApiProperties();
+                properties.setPack(values);
+                init();
+            }else {
+                LOG.error("Sapi annotations not config,Please Configured the Application class @Spai(controllers={\"your.controller.path1\",\"...\"})");
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title>SAPI. A simple api scanner</title>
     <meta charset="utf-8">
@@ -74,7 +74,7 @@
             <caption>接口参数：</caption>
             <thead>
             <tr>
-                <th style="width:50%">字段</th>
+                <th style="width:50%">参数</th>
                 <th style="width:50%">类型</th>
             </tr>
             </thead>
@@ -83,6 +83,9 @@
                 <td>{{field.name}}</td>
                 <td>{{field.type}}</td>
             </tr>
+            <tr v-if="data.fieldList.length<=0">
+                <td colspan="2" class="text-center">该接口未定义参数</td>
+            </tr>
 
             </tbody>
         </table>
@@ -90,9 +93,9 @@
         </div>
         <nav>
             <ul class="pager">
-                <li><a v-on:click="jumpPage(-1)">上一页</a></li>
+                <li><a v-on:click="jumpPage(-1)" class="glyphicon glyphicon-chevron-left"></a></li>
                 <li>{{currentPage}}/{{totalPage}}</li>
-                <li><a v-on:click="jumpPage(1)">下一页</a></li>
+                <li><a v-on:click="jumpPage(1)" class="glyphicon glyphicon-chevron-right"></a></li>
             </ul>
         </nav>
 
@@ -108,7 +111,7 @@
                     <button type="reset" class="close" data-dismiss="modal" aria-hidden="true" v-on:click="close">
                         <span class="glyphicon glyphicon-remove-circle"></span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">API Testing</h4>
+                    <h4 class="modal-title" id="myModalLabel">API</h4>
                 </div>
                 <div class="modal-body" style="padding: 5px">
                     <div class="input-group">
@@ -123,6 +126,8 @@
                                 <li><a v-on:click="reqType('GET')">GET  </a></li>
                                 <li><a v-on:click="reqType('PUT')">PUT   </a></li>
                                 <li><a v-on:click="reqType('DELETE')">DELETE</a></li>
+                                <li><a v-on:click="reqType('PATCH')">PATCH</a></li>
+
                             </ul>
                         </div><!-- /btn-group -->
 
@@ -156,7 +161,7 @@
                         <pre id="returnData" class='CodeContainer codeData'>
                         </pre>
                     <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
-                    <span class="label label-warning" v-else-if="resultMsg!='200'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{returnData.status}} Error: {{returnData.error}}</span>
+                    <span class="label label-warning" v-else-if="resultMsg!='200'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{resultMsg}} Error: {{requestErr}}</span>
 
                 </div>
 
@@ -389,7 +394,8 @@
                 resultMsg:"200",
                 formData:new FormData(),
                 jsonActive:false,
-                xmlActive:false
+                xmlActive:false,
+                requestErr:""
             },
             methods: {
                 getRequestType:function () {
@@ -433,12 +439,10 @@
                 }
 
             }, doDebug: function (data) {
-
+                    vm2.requestErr="";
                     vm2.returnData = "Requesting...";
                     if(vm2.requestType=="GET"){
-
                         var tempUrl="";
-
                         for(var i=0;i<data.fieldList.length;i++){
                             if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined){
                                tempUrl=tempUrl+data.fieldList[i].name+"="+data.fieldList[i].value+"&";
@@ -452,12 +456,14 @@
                                     vm2.changeDataStyle("JSON");
                                 },
                                 function (err){
-                                    vm2.returnData=err.body;
-                                    vm2.resultMsg=err.status;
+                                    vm2.returnData=err.body.message;
+                                    vm2.resultMsg=err.body.status;
+                                    vm2.requestErr=err.body.error;
+                                    vm2.changeDataStyle("JSON");
                                 } );
                     }
 
-                    if(vm2.requestType=="POST"){
+                    if(vm2.requestType=="POST"||vm2.requestType=="PUT"){
 
                         for(var i=0;i<data.fieldList.length;i++){
                             if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined){
@@ -473,8 +479,55 @@
                                     vm2.changeDataStyle("JSON");
                                 },
                                 function (err){
-                                    vm2.returnData=err.body;
-                                    vm2.resultMsg=err.status;
+                                    vm2.returnData=err.body.message;
+                                    vm2.resultMsg=err.body.status;
+                                    vm2.requestErr=err.body.error;
+                                    vm2.changeDataStyle("JSON");
+                                } );
+
+                    }
+
+                    if(vm2.requestType=="DELETE"){
+                        for(var i=0;i<data.fieldList.length;i++){
+                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined){
+                                vm2.formData.delete(data.fieldList[i].name);
+                                vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                            }
+                        }
+
+                        this.$http.delete(vm2.curl,vm2.formData,vm2.reqHeaders)
+                            .then(function (res) {
+                                    vm2.returnData=res.bodyText;
+                                    vm2.resultMsg="200"
+                                    vm2.changeDataStyle("JSON");
+                                },
+                                function (err){
+                                    vm2.returnData=err.body.message;
+                                    vm2.resultMsg=err.body.status;
+                                    vm2.requestErr=err.body.error;
+                                    vm2.changeDataStyle("JSON");
+                                } );
+
+                    }
+                    if(vm2.requestType=="PATCH"){
+                        for(var i=0;i<data.fieldList.length;i++){
+                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined){
+                                vm2.formData.delete(data.fieldList[i].name);
+                                vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                            }
+                        }
+
+                        this.$http.patch(vm2.curl,vm2.formData,vm2.reqHeaders)
+                            .then(function (res) {
+                                    vm2.returnData=res.bodyText;
+                                    vm2.resultMsg="200"
+                                    vm2.changeDataStyle("JSON");
+                                },
+                                function (err){
+                                    vm2.returnData=err.body.message;
+                                    vm2.resultMsg=err.body.status;
+                                    vm2.requestErr=err.body.error;
+                                    vm2.changeDataStyle("JSON");
                                 } );
 
                     }

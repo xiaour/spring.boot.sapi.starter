@@ -12,4 +12,6 @@ import java.lang.annotation.*;
 public @interface Sapi {
 
     String [] controllers() default  {""};
+
+    boolean enable() default true;
 }
