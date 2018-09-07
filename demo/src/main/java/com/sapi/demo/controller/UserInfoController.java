@@ -12,10 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
  * @Description:
  * @Date: 2018/8/27 17:05
  */
-@SapiGroup(title = "用户管理")
+@SapiGroup(title = "Vip用户信息")
 @RestController
-@RequestMapping(value="/user")
-public class UserController {
+@RequestMapping(value="/userInfo")
+public class UserInfoController {
 
     /**
      * 获取用户信息

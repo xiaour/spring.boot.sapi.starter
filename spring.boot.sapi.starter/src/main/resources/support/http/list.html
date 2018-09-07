@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
-    <title>SAPI-首页</title>
+    <title>SAPI-API列表</title>
     <meta charset="utf-8">
-    <link href="sapistatic?s=/image/favicon.ico" rel="shortcut icon"/>
+    <link href="../sapistatic?s=/image/favicon.ico" rel="shortcut icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="sapistatic?s=/css/sapi.css">
-    <script src="sapistatic?s=/js/jquery.min.js&v=2.1.1"></script>
-    <script src="sapistatic?s=/js/jquery.min.js&v=2.1.1"></script>
-    <script src="sapistatic?s=/js/bootstrap.min.js&v=3.3.7"></script>
-    <script src="sapistatic?s=/js/vue.min.js&v=2.2.2"></script>
-    <script src="sapistatic?s=/js/vue-resource.min.js&v=1.5.1"></script>
-    <script src="sapistatic?s=/js/DataFormater.js"></script>
-
+    <link rel="stylesheet" href="../sapistatic?s=/css/sapi.css">
+    <script src="../sapistatic?s=/js/jquery.min.js&v=2.1.1"></script>
+    <script src="../sapistatic?s=/js/jquery.min.js&v=2.1.1"></script>
+    <script src="../sapistatic?s=/js/bootstrap.min.js&v=3.3.7"></script>
+    <script src="../sapistatic?s=/js/vue.min.js&v=2.2.2"></script>
+    <script src="../sapistatic?s=/js/vue-resource.min.js&v=1.5.1"></script>
+    <script src="../sapistatic?s=/js/DataFormater.js"></script>
 </head>
 <body>
 ​<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -23,158 +22,205 @@
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">API分组</a></li>
-                <li ><a href="sapi/list">API列表</a></li>
-                <li><a href="/faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+                <li ><a href="../sapi">API分组</a></li>
+                <li class="active"><a href="#">API列表</a></li>
+                <li><a href="../faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
             </ul>
         </div>
     </div>
 </nav>
 
 
-<div  class="container col-md-12" style="padding-top: 55px;">
-    <div id="apiMenu"class="col-md-2"  v-cloak>
-        <ul id="main-nav" class="main-nav nav nav-tabs nav-stacked">
+<div  class="container" style="padding-top: 55px;min-height: 400px;">
 
-            <li v-for="(items, key,index) in groupData">
-                <a :href="gernerateId(key)" class="nav-header collapsed" data-toggle="collapse">
-                    <i class="glyphicon glyphicon-list"></i>
-                    {{key}}
-                    <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
-                </a>
-                <ul :id="key"  class="nav nav-list secondmenu collapse in" v-if="index==0">
-                    <li v-for="api in items">
-                        <a v-on:click="openDebug(api)"><i class="glyphicon glyphicon-link"></i>&nbsp;{{api.url}}</a>
-                    </li>
-                </ul>
-                <ul :id="key"  class="nav nav-list secondmenu collapse" v-else>
-                    <li v-for="api in items">
-                        <a v-on:click="openDebug(api)"><i class="glyphicon glyphicon-link"></i>&nbsp;{{api.url}}</a>
-                    </li>
-                </ul>
-            </li>
 
-        </ul>
-    </div>
-
-    <div id="apiContent" class="row col-md-10" v-cloak>
-
-        <form id="modal-form"  enctype="multipart/form-data">
-
-        <div class="modal-body" style="padding: 5px">
-            <div class="input-group">
-                <div class="input-group-btn">
-                    <button type="button" class="btn btn-default">{{requestType}}</button>
-                    <button type="button" class="btn btn-default dropdown-toggle"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only"></span></button>
-                    <ul class="dropdown-menu">
-                        <li v-for="requestType in requestTypeArray">
-                            <a v-on:click="reqType(requestType)">{{requestType}}   </a>
-                        </li>
-                    </ul>
-                </div><!-- /btn-group -->
-
-                <input type="text" class="form-control" placeholder="Enter your Request URL" v-model="curl">
-                <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" v-on:click="doDebug(debugData)">Send</button>
-        </span>
-            </div><!-- /input-group -->
-            <br>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th style="width:25%">参数</th>
-                    <th style="width:50%">值</th>
-                    <th style="width:25%">数据类型</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="field in debugData.fieldList">
-                    <td>{{field.name}}</td>
-                    <td v-if="field.type!='MultipartFile'"><input type="text" class="form-control input-sm input-md" v-model="field.value" placeholder="数据值"></td>
-                    <td v-else><input type="file" :name="field.name" ref="field.name" class="form-control input-sm input-md" v-model="field.value" @change="changeFile(field,$event)" ></td>
-                    <td>{{field.type}}</td>
-                </tr>
-                <tr v-if="debugData.fieldList==null">
-                    <td colspan="4" class="text-center">请点击左侧API列表进行结果测试！</td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" v-on:click="changeDataStyle('JSON')" :class="{'active':jsonActive===true}">JSON</button>
-                <button type="button" class="btn btn-default" v-on:click="changeDataStyle('XML')" :class="{'active':xmlActive===true}">XML</button>
+    <div id="apiList" class="row" v-cloak>
+        <div class="jumbotron" v-for="data in apiList">
+            <div style="margin-bottom: 12px">
+                <div>接口URL： {{data.url}}</div>
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-success" v-on:click="openDebug(data)" data-toggle="modal" data-target="#debugModal">
+                        <span class="glyphicon glyphicon-play"></span>
+                    </button>
+                </div>
             </div>
-            <pre id="returnData" class='CodeContainer codeData-mx'>
-            </pre>
-            <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
-            <span class="label label-primary" v-else-if="resultMsg=='0'"><span class="glyphicon glyphicon-ok-circle"></span></span>
-            <span class="label label-warning" v-else-if="resultMsg!='200'||resultMsg!='0'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{resultMsg}} Error: {{requestErr}}</span>
 
+            <span >
+                <div>请求类型：{{data.requestType}}</div>
+            </span>
+
+            <div class="table-responsive">
+            <table class="table table-bordered">
+            <caption>接口参数：</caption>
+            <thead>
+            <tr>
+                <th style="width:50%">参数</th>
+                <th style="width:50%">类型</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="field in data.fieldList">
+                <td>{{field.name}}</td>
+                <td>{{field.type}}</td>
+            </tr>
+            <tr v-if="data.fieldList.length<=0">
+                <td colspan="2" class="text-center">该接口未定义参数</td>
+            </tr>
+
+            </tbody>
+        </table>
+            </div>
         </div>
-        </form>
+        <nav>
+            <ul class="pager">
+                <li><span v-on:click="jumpPage(-1)" class="glyphicon glyphicon-chevron-left"></span></li>
+                <li>{{currentPage}}/{{totalPage}}</li>
+                <li><span v-on:click="jumpPage(1)" class="glyphicon glyphicon-chevron-right"></span></li>
+            </ul>
+        </nav>
+
     </div>
 
- <footer class="footer col-md-10 pull-right" style="border-top: 1px solid #CCCCCC;background: #ffffff;margin-top: 35px;">
-        <div class="container text-center ">
-            <br>
-            <span>SAPI is a simple api starter for spring</span>
-            <h6> SAPI V1.2 ©️ xiaour</h6>
-            <img src="https://img.shields.io/badge/maven-v1.2-blue.svg">
-            <img src="https://img.shields.io/badge/github-sapi-green.svg">
-            <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg">
-        </div>
- </footer>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="debugModal" v-cloak tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" style="width:65%;">
+            <form id="modal-form"  enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 10px">
+                    <button type="reset" class="close" data-dismiss="modal" aria-hidden="true" v-on:click="close">
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">API</h4>
+                </div>
+                <div class="modal-body" style="padding: 5px">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default">{{requestType}}</button>
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span></button>
+                            <ul class="dropdown-menu">
+                                <li v-for="requestType in requestTypeArray">
+                                    <a v-on:click="reqType(requestType)">{{requestType}}   </a>
+                                </li>
+                            </ul>
+                        </div><!-- /btn-group -->
+
+                        <input type="text" class="form-control" placeholder="Enter your Request URL" v-model="curl">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" v-on:click="doDebug(debugData)">Send</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th style="width:25%">参数</th>
+                            <th style="width:50%">值</th>
+                            <th style="width:25%">数据类型</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="field in debugData.fieldList">
+                            <td>{{field.name}}</td>
+                            <td v-if="field.type!='MultipartFile'"><input type="text" class="form-control input-sm input-md" v-model="field.value" placeholder="数据值"></td>
+                            <td v-else><input type="file" :name="field.name" ref="field.name" class="form-control input-sm input-md" v-model="field.value" @change="changeFile(field,$event)" ></td>
+                            <td>{{field.type}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-default" v-on:click="changeDataStyle('JSON')" :class="{'active':jsonActive===true}">JSON</button>
+                        <button type="button" class="btn btn-default" v-on:click="changeDataStyle('XML')" :class="{'active':xmlActive===true}">XML</button>
+                    </div>
+                        <pre id="returnData" class='CodeContainer codeData'>
+                        </pre>
+                    <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
+                    <span class="label label-primary" v-else-if="resultMsg=='0'"><span class="glyphicon glyphicon-ok-circle"></span></span>
+                    <span class="label label-warning" v-else-if="resultMsg!='200'||resultMsg!='0'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{resultMsg}} Error: {{requestErr}}</span>
+
+                </div>
+
+            </div><!-- /.modal-content -->
+            </form>
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </div>
 
-
+<footer class="footer" style="border-top: 1px solid #CCCCCC">
+    <div class="container text-center ">
+        <br>
+        <span>SAPI is a simple api starter for spring</span>
+        <h6> SAPI V1.2 ©️ xiaour</h6>
+    </div>
+</footer>
 </body>
 <script type="text/javascript">
     $(function(){
-        vueMenu = new Vue({
-            el:'#apiMenu',
-            data:{
-                groupData:[]
 
+
+        vm = new Vue({
+            el:'#apiList',
+            data:{apiList : [],
+                currentPage:1,
+                totalPage:1
             },mounted:function () {
-                this.getApiGroup();
+                this.getmc(1);
             },
+
             methods: {
-                getApiGroup:function (){
-                    var url="sapidata/group";
-                    this.$http.get(url).then(function(res) {
-                            vueMenu.groupData = res.data.data;
-                        },
-                        function (err){
-                            console.log(err);
-                        } );
-                },gernerateId: function (value){
-                    return "#"+value
-                },openDebug: function (data) {
-                    vm2.close();
+                openDebug: function (data) {
                     var url = window.location.href;
                     vm2.curl=url.split("/sapi")[0]+data.url;
                     vm2.debugData=copy(data);
                     for(var i=0;i<vm2.debugData.fieldList.length;i++){
-                        data.fieldList[i].value="";
+                       data.fieldList[i].value="";
                     }
                     vm2.returnData="";
                     vm2.reqHeaders=[{name:null,value:null}];
                     vm2.requestTypeArray=data.requestType.split(",");
                     vm2.requestType=vm2.requestTypeArray[0];
-
                 },
-            }});
+                jumpPage:function(condition){
+                    vm.currentPage=vm.currentPage+condition;
+                    console.log(vm.currentPage)
+                    if(vm.currentPage==0){
+                        vm.currentPage=vm.currentPage+1;
+                        alert("已经是第一页了！");
+                        return;
+                    }
+                    if(vm.currentPage>vm.totalPage){
+                        alert("已经是最后一页了！");
+                        vm.currentPage=vm.currentPage-1;
+                        return;
+                    }
+                    this.getmc(vm.currentPage);
 
+                },getmc:function (page){
+                    var url="../sapidata/apiList";
+                    if(page!=null){
+                        url+="?pageNum="+page
+                    }
+                    this.$http.get(url).then(function(res) {
+                            vm.apiList = res.data.apiList;
+                            vm.totalPage = res.data.totalPage>0?res.data.totalPage:1;
+                        },
+                        function (err){
+                            console.log(err);
+                        } );
 
-
+                }
+            }
+        });
 
         vm2 = new Vue({
-            el:'#apiContent',
+            el:'#debugModal',
             data:{debugData:"",
-                requestTypeArray:["POST","GET","DELETE","PATCH"],
-                requestType:"POST",
+                requestTypeArray:[],
+                requestType:"",
                 returnData:"",
                 reqHeaders:[],
                 curl:"",

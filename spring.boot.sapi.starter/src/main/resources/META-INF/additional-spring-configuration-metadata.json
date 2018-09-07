@@ -3,11 +3,14 @@
     {
       "name": "spring.sapi.enable",
       "type": "java.lang.String",
-      "description": "Enable sapi (true/false) ."
+      "sourceType": "com.github.xiaour.api_scanner.config.ApiServerAutoConfigure",
+      "description": "Enable sapi (true/false) .",
+      "defaultValue": true
     },
     {
       "name": "spring.sapi.controllers",
       "type": "java.lang.String[]",
+      "sourceType": "com.github.xiaour.api_scanner.config.ApiServerAutoConfigure",
       "description": "your project controllers folder path."
     }
   ]

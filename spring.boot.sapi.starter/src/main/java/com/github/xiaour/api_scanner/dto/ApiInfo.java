@@ -2,6 +2,9 @@ package com.github.xiaour.api_scanner.dto;
 
 import java.util.List;
 
+/**
+ * 接口信息
+ */
 public class ApiInfo {
 
 
@@ -21,6 +24,15 @@ public class ApiInfo {
 
     private String name;//名称
 
+    private String groupTitle;//分组名称
+
+    public String getGroupTitle() {
+        return groupTitle;
+    }
+
+    public void setGroupTitle(String groupTitle) {
+        this.groupTitle = groupTitle;
+    }
 
     public String getName() {
         return name;

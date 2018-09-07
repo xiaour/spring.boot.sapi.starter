@@ -10,6 +10,8 @@ public class ApiField {
 
     private String remark;//备注
 
+    private boolean isPath=false;//是否路径参数
+
     public String getType() {
         return type;
     }
@@ -42,5 +44,11 @@ public class ApiField {
         this.remark = remark;
     }
 
+    public boolean getIsPath() {
+        return isPath;
+    }
 
+    public void setIsPath(boolean isPath) {
+        this.isPath = isPath;
+    }
 }

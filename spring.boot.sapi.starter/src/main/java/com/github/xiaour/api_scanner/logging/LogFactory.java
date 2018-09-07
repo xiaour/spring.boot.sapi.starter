@@ -26,25 +26,25 @@ public class LogFactory {
         String logType= System.getProperty("druid.logType");
         if(logType != null){
             if(logType.equalsIgnoreCase("slf4j")){
-                tryImplementation("org.slf4j.Logger", "com.alibaba.druid.support.logging.SLF4JImpl");
+                tryImplementation("org.slf4j.Logger", "com.github.xiaour.api_scanner.logging.SLF4JImpl");
             }else if(logType.equalsIgnoreCase("log4j")){
-                tryImplementation("org.apache.log4j.Logger", "com.alibaba.druid.support.logging.Log4jImpl");
+                tryImplementation("org.apache.log4j.Logger", "com.github.xiaour.api_scanner.logging.Log4jImpl");
             }else if(logType.equalsIgnoreCase("log4j2")){
-                tryImplementation("org.apache.logging.log4j.Logger", "com.alibaba.druid.support.logging.Log4j2Impl");
+                tryImplementation("org.apache.logging.log4j.Logger", "com.github.xiaour.api_scanner.logging.Log4j2Impl");
             }else if(logType.equalsIgnoreCase("commonsLog")){
                 tryImplementation("org.apache.commons.logging.LogFactory",
-                        "com.alibaba.druid.support.logging.JakartaCommonsLoggingImpl");
+                        "com.github.xiaour.api_scanner.logging.JakartaCommonsLoggingImpl");
             }else if(logType.equalsIgnoreCase("jdkLog")){
-                tryImplementation("java.util.logging.Logger", "com.alibaba.druid.support.logging.Jdk14LoggingImpl");
+                tryImplementation("java.util.logging.Logger", "com.github.xiaour.api_scanner.logging.Jdk14LoggingImpl");
             }
         }
         // 优先选择log4j,而非Apache Common Logging. 因为后者无法设置真实Log调用者的信息
-        tryImplementation("org.slf4j.Logger", "com.alibaba.druid.support.logging.SLF4JImpl");
-        tryImplementation("org.apache.log4j.Logger", "com.alibaba.druid.support.logging.Log4jImpl");
-        tryImplementation("org.apache.logging.log4j.Logger", "com.alibaba.druid.support.logging.Log4j2Impl");
+        tryImplementation("org.slf4j.Logger", "com.github.xiaour.api_scanner.logging.SLF4JImpl");
+        tryImplementation("org.apache.log4j.Logger", "com.github.xiaour.api_scanner.logging.Log4jImpl");
+        tryImplementation("org.apache.logging.log4j.Logger", "com.github.xiaour.api_scanner.logging.Log4j2Impl");
         tryImplementation("org.apache.commons.logging.LogFactory",
-                          "com.alibaba.druid.support.logging.JakartaCommonsLoggingImpl");
-        tryImplementation("java.util.logging.Logger", "com.alibaba.druid.support.logging.Jdk14LoggingImpl");
+                          "com.github.xiaour.api_scanner.logging.JakartaCommonsLoggingImpl");
+        tryImplementation("java.util.logging.Logger", "com.github.xiaour.api_scanner.logging.Jdk14LoggingImpl");
 
         if (logConstructor == null) {
             try {
@@ -100,7 +100,7 @@ public class LogFactory {
     public static synchronized void selectLog4JLogging() {
         try {
             Resources.classForName("org.apache.log4j.Logger");
-            Class implClass = Resources.classForName("com.alibaba.druid.support.logging.Log4jImpl");
+            Class implClass = Resources.classForName("com.github.xiaour.api_scanner.logging.Log4jImpl");
             logConstructor = implClass.getConstructor(new Class[] { String.class });
         } catch (Throwable t) {
             //ignore
@@ -111,7 +111,7 @@ public class LogFactory {
     public static synchronized void selectJavaLogging() {
         try {
             Resources.classForName("java.util.logging.Logger");
-            Class implClass = Resources.classForName("com.alibaba.druid.support.logging.Jdk14LoggingImpl");
+            Class implClass = Resources.classForName("com.github.xiaour.api_scanner.logging.Jdk14LoggingImpl");
             logConstructor = implClass.getConstructor(new Class[] { String.class });
         } catch (Throwable t) {
             //ignore

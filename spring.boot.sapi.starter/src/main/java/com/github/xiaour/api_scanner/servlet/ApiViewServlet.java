@@ -1,8 +1,10 @@
 package com.github.xiaour.api_scanner.servlet;
 
+import com.github.xiaour.api_scanner.config.ApiServerAutoConfigure;
 import com.github.xiaour.api_scanner.logging.Log;
 import com.github.xiaour.api_scanner.logging.LogFactory;
 import com.github.xiaour.api_scanner.util.Utils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,24 +13,58 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "FaqServlet", urlPatterns = {"/faq"})
-public class FaqServlet extends HttpServlet {
 
-    private final static Log LOG = LogFactory.getLog(FaqServlet.class);
+@WebServlet(name = "ApiViewServlet", urlPatterns = {"/sapi/*"})
+@ConditionalOnProperty(name = "spring.sapi.enable", havingValue = "true", matchIfMissing = true)
+public class ApiViewServlet extends HttpServlet {
 
+    private final static Log LOG = LogFactory.getLog(ApiViewServlet.class);
 
     protected final String resourcePath;
 
-
-    public FaqServlet(){
+    public ApiViewServlet(){
         this.resourcePath = "support/http";
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doPost(request,response);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.setContentType("application/json;charset=utf-8");//指定返回的格式为JSON格式
+        resp.setCharacterEncoding("UTF-8");//setContentType与setCharacterEncoding的顺序不能调换，否则还是无法解决中文乱码的问题
+        String url=req.getRequestURI();
 
+        if(url.equals(ApiServerAutoConfigure.getContextPath()+"/sapi/list".replaceAll("//","/"))) {
+            list(req, resp);
+        }else {
+            index(req,resp);
+        }
+    }
+
+    private void list(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String contextPath = request.getContextPath();
+        String servletPath = request.getServletPath();
+
+        response.setCharacterEncoding("utf-8");
+
+        if (contextPath == null) { // root context
+            contextPath = "";
+        }
+        String uri = contextPath + servletPath;
+        String path = "/list.html";
+
+        try {
+            returnResourceFile(path, uri, response);
+        } catch (ServletException e) {
+            LOG.error("Sapi init exception:",e);
+        }
+    }
+
+    private void index(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String contextPath = request.getContextPath();
         String servletPath = request.getServletPath();
         String requestURI = request.getRequestURI();
@@ -42,21 +78,14 @@ public class FaqServlet extends HttpServlet {
         String path = requestURI.substring(contextPath.length() + servletPath.length());
 
         if ("/".equals(path)||"".equals(path)) {
-            path="/faq.html";
+            path="/index.html";
         }
 
         try {
             returnResourceFile(path, uri, response);
         } catch (ServletException e) {
             LOG.error("Sapi init exception:",e);
-
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        doGet(req,resp);
     }
 
     protected void returnResourceFile(String fileName, String uri, HttpServletResponse response)
@@ -94,5 +123,4 @@ public class FaqServlet extends HttpServlet {
     protected String getFilePath(String fileName) {
         return resourcePath + fileName;
     }
-
 }

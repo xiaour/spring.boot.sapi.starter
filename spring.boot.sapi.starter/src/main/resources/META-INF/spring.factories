@@ -1,2 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.xiaour.api_scanner.filter.SapiFactoryAutoConfigure
+  com.github.xiaour.api_scanner.config.SapiGroupManager,\
+  com.github.xiaour.api_scanner.config.SapiFactoryAutoConfigure,\
+  com.github.xiaour.api_scanner.config.ApiServerAutoConfigure
+

@@ -11,45 +11,44 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "FaqServlet", urlPatterns = {"/faq"})
-public class FaqServlet extends HttpServlet {
+/**
+ * @Author: Xiaour
+ * @Description:
+ * @Date: 2018/9/3 13:55
+ */
+@WebServlet(name = "sapistatic", urlPatterns = {"/sapistatic"})
+public class SapiStaticServlet extends HttpServlet {
 
-    private final static Log LOG = LogFactory.getLog(FaqServlet.class);
+    private final static Log LOG = LogFactory.getLog(SapiStaticServlet.class);
 
 
     protected final String resourcePath;
 
 
-    public FaqServlet(){
+    public SapiStaticServlet(){
         this.resourcePath = "support/http";
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String contextPath = request.getContextPath();
         String servletPath = request.getServletPath();
-        String requestURI = request.getRequestURI();
 
         response.setCharacterEncoding("utf-8");
 
         if (contextPath == null) { // root context
             contextPath = "";
         }
-        String uri = contextPath + servletPath;
-        String path = requestURI.substring(contextPath.length() + servletPath.length());
 
-        if ("/".equals(path)||"".equals(path)) {
-            path="/faq.html";
-        }
+        String resourceFile=request.getParameter("s");
+        String uri = contextPath + servletPath;
+        //String path = requestURI.substring(contextPath.length() + servletPath.length());
 
         try {
-            returnResourceFile(path, uri, response);
+            returnResourceFile(resourceFile, uri, response);
         } catch (ServletException e) {
             LOG.error("Sapi init exception:",e);
-
         }
     }
 
@@ -63,18 +62,10 @@ public class FaqServlet extends HttpServlet {
             throws ServletException,
             IOException {
 
-        String filePath = getFilePath(fileName);
+        String filePath = new ApiViewServlet().getFilePath(fileName);
 
         if (filePath.endsWith(".html")) {
             response.setContentType("text/html; charset=utf-8");
-        }
-        if (fileName.endsWith(".jpg")) {
-            byte[] bytes = Utils.readByteArrayFromResource(filePath);
-            if (bytes != null) {
-                response.getOutputStream().write(bytes);
-            }
-
-            return;
         }
 
         String text = Utils.readFromResource(filePath);
@@ -90,9 +81,4 @@ public class FaqServlet extends HttpServlet {
         }
         response.getWriter().write(text);
     }
-
-    protected String getFilePath(String fileName) {
-        return resourcePath + fileName;
-    }
-
 }
