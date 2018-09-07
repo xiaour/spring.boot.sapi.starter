@@ -49,3 +49,5 @@ public class DemoApplication {
 20180710.新增了接口分页。
 
 20180828.优化了返回结果格式化的问题。
+
+20180907.改版了界面列表展示部分，修复了Class扫描不到的情况。（该版本尚未发布到Maven Center，请自行Build）
