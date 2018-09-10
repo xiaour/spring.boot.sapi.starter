@@ -1,6 +1,6 @@
 [![Chat at https://gitter.im/spring-sapi/](https://badges.gitter.im/javalin-io/general.svg)](https://gitter.im/spring-sapi/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Maven](https://img.shields.io/badge/maven-v1.2-blue.svg)](https://search.maven.org/artifact/com.github.xiaour/xiaour.springboot.sapi.starter/1.2/jar)
+[![Maven](https://img.shields.io/badge/maven-v1.3-blue.svg)](https://search.maven.org/artifact/com.github.xiaour/xiaour.springboot.sapi.starter/1.2/jar)
 
 # spring.boot.sapi.starter
 一个简单的API输出工具，只需简单配置，即可将接口中的所有API接口及参数全部以结构化的方式输出的页面上。
@@ -11,7 +11,7 @@
 <dependency>
   <groupId>com.github.xiaour</groupId>
   <artifactId>xiaour.springboot.sapi.starter</artifactId>
-  <version>1.2</version>
+  <version>1.3</version>
 </dependency>
 ```
 2.启动类加入注解Sapi.
