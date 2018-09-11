@@ -1,4 +1,3 @@
-[![Chat at https://gitter.im/spring-sapi/](https://badges.gitter.im/javalin-io/general.svg)](https://gitter.im/spring-sapi/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Maven](https://img.shields.io/badge/maven-v1.3-blue.svg)](https://search.maven.org/artifact/com.github.xiaour/xiaour.springboot.sapi.starter/1.2/jar)
 
