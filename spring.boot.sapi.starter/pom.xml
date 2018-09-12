@@ -20,7 +20,7 @@
 	<name>com.github.xiaour.sapi.starter</name>
     <packaging>jar</packaging>
     <url>https://github.com/xiaour/spring.boot.sapi.starter</url>
-    <description>Simple API for Spring Boot</description>
+    <description>SAPI:spring.boot.sapi.starter </description>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>

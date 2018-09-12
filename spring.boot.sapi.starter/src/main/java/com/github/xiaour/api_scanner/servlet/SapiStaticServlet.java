@@ -11,11 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * @Author: Xiaour
- * @Description:
- * @Date: 2018/9/3 13:55
- */
+
 @WebServlet(name = "sapistatic", urlPatterns = {"/sapistatic"})
 public class SapiStaticServlet extends HttpServlet {
 

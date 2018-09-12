@@ -25,15 +25,14 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">API分组</a></li>
                 <li ><a href="sapi/list">API列表</a></li>
-                <li><a href="/faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+                <li><a href="faq"><span class="glyphicon glyphicon-question-sign"></span></a></li>
             </ul>
         </div>
     </div>
 </nav>
 
-
 <div  class="container col-md-12" style="padding-top: 55px;">
-    <div id="apiMenu"class="col-md-2"  v-cloak>
+    <div id="apiMenu" class="col-md-3 clear-padding"  v-cloak>
         <ul id="main-nav" class="main-nav nav nav-tabs nav-stacked">
 
             <li v-for="(items, key,index) in groupData">
@@ -57,11 +56,10 @@
         </ul>
     </div>
 
-    <div id="apiContent" class="row col-md-10" v-cloak>
+    <div id="apiContent" class="container col-md-9" v-cloak>
 
-        <form id="modal-form"  enctype="multipart/form-data">
+            <form id="modal-form"  enctype="multipart/form-data">
 
-        <div class="modal-body" style="padding: 5px">
             <div class="input-group">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default">{{requestType}}</button>
@@ -78,50 +76,81 @@
 
                 <input type="text" class="form-control" placeholder="Enter your Request URL" v-model="curl">
                 <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" v-on:click="doDebug(debugData)">Send</button>
-        </span>
+                <button class="btn btn-primary" type="button" v-on:click="doDebug(debugData)">Send</button>
+                </span>
             </div><!-- /input-group -->
             <br>
-            <table class="table table-bordered">
+            <table class="table table-bordered" v-if="debugData.fieldList.length > 0">
                 <thead>
                 <tr>
+                    <th style="width:5%"></th>
                     <th style="width:25%">参数</th>
                     <th style="width:50%">值</th>
-                    <th style="width:25%">数据类型</th>
+                    <th style="width:20%">数据类型</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="field in debugData.fieldList">
+                <tr  v-for="field in debugData.fieldList">
+                    <td style="text-align: center"><input type="checkbox" v-model="field.checked"></td>
                     <td>{{field.name}}</td>
                     <td v-if="field.type!='MultipartFile'"><input type="text" class="form-control input-sm input-md" v-model="field.value" placeholder="数据值"></td>
                     <td v-else><input type="file" :name="field.name" ref="field.name" class="form-control input-sm input-md" v-model="field.value" @change="changeFile(field,$event)" ></td>
                     <td>{{field.type}}</td>
                 </tr>
-                <tr v-if="debugData.fieldList==null">
-                    <td colspan="4" class="text-center">请点击左侧API列表进行结果测试！</td>
-                </tr>
+
                 </tbody>
             </table>
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" v-on:click="changeDataStyle('JSON')" :class="{'active':jsonActive===true}">JSON</button>
-                <button type="button" class="btn btn-default" v-on:click="changeDataStyle('XML')" :class="{'active':xmlActive===true}">XML</button>
-            </div>
-            <pre id="returnData" class='CodeContainer codeData-mx'>
-            </pre>
-            <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
-            <span class="label label-primary" v-else-if="resultMsg=='0'"><span class="glyphicon glyphicon-ok-circle"></span></span>
-            <span class="label label-warning" v-else-if="resultMsg!='200'||resultMsg!='0'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{resultMsg}} Error: {{requestErr}}</span>
 
-        </div>
-        </form>
+            <div v-if="requestBody==true">
+
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" value="application/json" v-model="contentType" v-model="contentType">application/json
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="application/xml" v-model="contentType">application/xml
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="application/javascript" v-model="contentType">application/javascript
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="text/html" v-model="contentType">text/html
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="text/xml" v-model="contentType">text/xml
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="text/plain" v-model="contentType">text/plain
+                    </label>
+                </div>
+                <textarea class="form-control col-md-9" v-model="requestContent" style="bottom: 5px" placeholder="@RequestBody"></textarea>
+            </div>
+
+            <div>
+                <div class="btn-group btn-group-xs" role="group">
+                    <button type="button" class="btn btn-default" v-on:click="changeDataStyle('JSON')" :class="{'active':jsonActive==true}">JSON</button>
+                    <button type="button" class="btn btn-default" v-on:click="changeDataStyle('XML')" :class="{'active':jsonActive==false}">XML</button>
+                </div>
+                <pre id="returnJsonData" v-html="formatData" class='CodeContainer codeData-mx' v-if="jsonActive==true">
+
+                </pre>
+                <div id="returnXmlData" v-html="formatData" class='CodeContainer codeData-mx' v-if="jsonActive==false">
+
+                </div>
+
+                <span class="label label-success" v-if="resultMsg=='200'"><span class="glyphicon glyphicon-ok-circle"></span>Status: {{resultMsg}} OK</span>
+                <span class="label label-primary" v-else-if="resultMsg=='0'"><span class="glyphicon glyphicon-ok-circle"></span></span>
+                <span class="label label-warning" v-else-if="resultMsg!='200'||resultMsg!='0'"><span class="glyphicon glyphicon-exclamation-sign"></span>Status: {{resultMsg}} Error: {{requestErr}}</span>
+            </div>
+            </form>
     </div>
 
- <footer class="footer col-md-10 pull-right" style="border-top: 1px solid #CCCCCC;background: #ffffff;margin-top: 35px;">
+ <footer class="footer col-md-12 pull-center" style="border-top: 1px solid #CCCCCC;background: #ffffff;margin-top: 35px;">
         <div class="container text-center ">
             <br>
             <span>SAPI is a simple api starter for spring</span>
-            <h6> SAPI V1.2 ©️ xiaour</h6>
-            <img src="https://img.shields.io/badge/maven-v1.2-blue.svg">
+            <h6> SAPI V1.3 ©️ xiaour</h6>
+            <img src="https://img.shields.io/badge/maven-v1.3-blue.svg">
             <img src="https://img.shields.io/badge/github-sapi-green.svg">
             <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg">
         </div>
@@ -154,82 +183,86 @@
                 },openDebug: function (data) {
                     vm2.close();
                     var url = window.location.href;
+                    history.pushState({},null,url.split("#")[0]+"#"+data.url);
                     vm2.curl=url.split("/sapi")[0]+data.url;
-                    vm2.debugData=copy(data);
-                    for(var i=0;i<vm2.debugData.fieldList.length;i++){
-                        data.fieldList[i].value="";
+                    var tempData=deepClone(data);
+                    vm2.debugData=this.filterData(tempData);
+
+                    if(vm2.debugData.fieldList!=null) {
+                        for (var i = 0; i < vm2.debugData.fieldList.length; i++) {
+                            data.fieldList[i].value = "";
+                        }
                     }
-                    vm2.returnData="";
-                    vm2.reqHeaders=[{name:null,value:null}];
+
                     vm2.requestTypeArray=data.requestType.split(",");
                     vm2.requestType=vm2.requestTypeArray[0];
+                },filterData:function (data) {
 
-                },
+                    var tempData=data.fieldList;
+
+                    for(var i=0;i<tempData.length;i++){
+                        tempData[i].checked="checked";
+                        if(tempData[i].isRequestBody){
+                            vm2.requestBody=true;
+                            vm2.contentType="application/json";
+                            tempData.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    return data;
+                }
             }});
-
-
-
 
         vm2 = new Vue({
             el:'#apiContent',
-            data:{debugData:"",
-                requestTypeArray:["POST","GET","DELETE","PATCH"],
-                requestType:"POST",
-                returnData:"",
-                reqHeaders:[],
-                curl:"",
-                resultMsg:"0",
-                formData:new FormData(),
-                jsonActive:false,
-                xmlActive:false,
-                requestErr:""
+            data:{debugData:{fieldList:[]},requestBody:false,contentType:null,
+                requestTypeArray:["POST","GET","DELETE","PATCH"],requestContent:null,
+                requestType:"POST", requestBody:null, returnData:"",
+                reqHeaders:[], curl:"", resultMsg:"0", formData:new FormData(),
+                jsonActive:true, requestErr:"",formatData:""
             },
             methods: {
-
                 changeDataStyle:function(style){
-                if(style=="XML"){
-                    try {
-                        if(isXML(vm2.returnData)) {
-                            formatXML("returnData", vm2.returnData);
-                            vm2.xmlActive = true;
-                            vm2.jsonActive = false;
-                        }else{
-                            document.getElementById("returnData").innerHTML =vm2.returnData;
-                        }
-                    }catch (err){
-                        try {
-                            Process("returnData", vm2.returnData);
-                            vm2.xmlActive = false;
-                            vm2.jsonActive = true;
-                        }catch (err2){
-                            document.getElementById("returnData").innerHTML =vm2.returnData;
-                        }
+
+                    var flag=isJSON(vm2.returnData);
+
+                    style=flag!=true?"XML":"JSON";
+
+                    if(style=="XML"){
+
+                        vm2.jsonActive = false;
+
+                        vm2.formatData=formatXML("returnXmlData", vm2.returnData);
+
+                    }else if(style=="JSON"){
+
+                        vm2.jsonActive = true;
+
+                        vm2.formatData=formatJson("returnJsonData", vm2.returnData);
+
+                    }else{
+                        vm2.jsonActive = true;
+                        vm2.formatData =vm2.returnData;
+
                     }
 
-                }
-                if(style=="JSON"){
-                    try {
-                        Process("returnData", vm2.returnData);
-                        vm2.xmlActive=false;
-                        vm2.jsonActive=true;
-                    }catch (err){
-                        if(isXML(vm2.returnData)) {
-                            formatXML("returnData",vm2.returnData);
-                            vm2.xmlActive=true;
-                            vm2.jsonActive=false;
-                        }else{
-                            document.getElementById("returnData").innerHTML =vm2.returnData;
-                        }
+            },doDebug: function (data) {
+                    vm2.requestErr = "";
+                    vm2.returnData = "requesting...";
+                    var requestUrl = vm2.curl;
+                    if (vm2.requestType == "") {
+                        vm2.requestType == vm2.requestTypeArray[0];
                     }
-                }
+                    if (vm2.contentType != null && vm2.contentType != "") {
+                        var contentType = {name: 'Content-Type', value: vm2.contentType};
+                        vm2.reqHeaders.push(contentType);
+                    }
+                    //处理requestBody的方式
+                    if (vm2.requestContent != null && vm2.requestContent != "") {
+                        return vm2.post(requestUrl,vm2.requestContent,vm2.reqHeaders);
+                    }
 
-            }, doDebug: function (data) {
-                    vm2.requestErr="";
-                    vm2.returnData = "Requesting...";
-                    var requestUrl=vm2.curl;
-                    if(vm2.requestType==""){
-                        vm2.requestType==vm2.requestTypeArray[0];
-                    }
 
                     //处理路径参数
                     for(var i=0;i<data.fieldList.length;i++){
@@ -242,9 +275,13 @@
                     if(vm2.requestType=="GET"){
                         var tempUrl="";
                         for(var i=0;i<data.fieldList.length;i++){
-                            if (data.fieldList[i].type != "MultipartFile" && data.fieldList[i].value != undefined&&!data.fieldList[i].isPath) {
-                                tempUrl = tempUrl + data.fieldList[i].name + "=" + data.fieldList[i].value + "&";
+                            console.log(data.fieldList[i].checked);
+                            if(data.fieldList[i].checked!=false) {
+                                if (data.fieldList[i].type != "MultipartFile" && data.fieldList[i].value != undefined && !data.fieldList[i].isPath) {
+                                    tempUrl = tempUrl + data.fieldList[i].name + "=" + data.fieldList[i].value + "&";
+                                }
                             }
+                            console.log(tempUrl);
                         }
 
                         this.$http.get(requestUrl+"?"+tempUrl,vm2.reqHeaders)
@@ -264,32 +301,25 @@
                     if(vm2.requestType=="POST"||vm2.requestType=="PUT"){
 
                         for(var i=0;i<data.fieldList.length;i++){
-                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined&&!data.fieldList[i].isPath){
-                                vm2.formData.delete(data.fieldList[i].name);
-                                vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                            if(data.fieldList[i].checked!=false) {
+                                if (data.fieldList[i].type != "MultipartFile" && data.fieldList[i].value != undefined && !data.fieldList[i].isPath) {
+                                    vm2.formData.delete(data.fieldList[i].name);
+                                    vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                                }
                             }
                         }
 
-                        this.$http.post(requestUrl,vm2.formData,vm2.reqHeaders)
-                            .then(function (res) {
-                                    vm2.returnData=res.bodyText;
-                                    vm2.resultMsg="200"
-                                    vm2.changeDataStyle("JSON");
-                                },
-                                function (err){
-                                    vm2.returnData=err.body.message;
-                                    vm2.resultMsg=err.body.status;
-                                    vm2.requestErr=err.body.error;
-                                    vm2.changeDataStyle("JSON");
-                                } );
+                        vm2.post(requestUrl,vm2.formData,vm2.reqHeaders);
 
                     }
 
                     if(vm2.requestType=="DELETE"){
                         for(var i=0;i<data.fieldList.length;i++){
-                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined&&!data.fieldList[i].isPath){
-                                vm2.formData.delete(data.fieldList[i].name);
-                                vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                            if(data.fieldList[i].checked!=false) {
+                                if (data.fieldList[i].type != "MultipartFile" && data.fieldList[i].value != undefined && !data.fieldList[i].isPath) {
+                                    vm2.formData.delete(data.fieldList[i].name);
+                                    vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                                }
                             }
                         }
 
@@ -309,9 +339,11 @@
                     }
                     if(vm2.requestType=="PATCH"){
                         for(var i=0;i<data.fieldList.length;i++){
-                            if(data.fieldList[i].type!="MultipartFile"&&data.fieldList[i].value!=undefined&&!data.fieldList[i].isPath){
-                                vm2.formData.delete(data.fieldList[i].name);
-                                vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                            if(data.fieldList[i].checked!=false) {
+                                if (data.fieldList[i].type != "MultipartFile" && data.fieldList[i].value != undefined && !data.fieldList[i].isPath) {
+                                    vm2.formData.delete(data.fieldList[i].name);
+                                    vm2.formData.append(data.fieldList[i].name, data.fieldList[i].value);
+                                }
                             }
                         }
 
@@ -332,7 +364,21 @@
                 },
                 reqType:function (type) {
                     vm2.requestType=type;
-                },
+                },post:function (url,body,header) {
+                    this.$http.post(url,body,header)
+                        .then(function (res) {
+                                vm2.returnData=res.bodyText;
+                                vm2.resultMsg="200"
+                                vm2.changeDataStyle("JSON");
+                            },
+                            function (err){
+                                vm2.returnData=err.body.message;
+                                vm2.resultMsg=err.body.status;
+                                vm2.requestErr=err.body.error;
+                                vm2.changeDataStyle("JSON");
+                            } );
+
+                }/*,
                 addHeaders:function (data) {
                     var header=vm2.reqHeaders;
                     var flag=1;
@@ -346,11 +392,17 @@
                         vm2.reqHeaders.push({name:null,value:null});
                     }
 
-                },close:function () {
+                }*/,close:function () {
                     vm2.debugData="";
                     vm2.returnData="";
                     vm2.resultMsg="0";
                     vm2.requestErr="";
+                    vm2.returnData=null;
+                    vm2.reqHeaders=[{name:null,value:null}];
+                    vm2.requestBody=false;
+                    vm2.contentType=null;
+                    vm2.requestContent=null;
+                    vm2.formatData="";
                     $("#returnData").empty();
                 },
                 changeFile:function(data,event){

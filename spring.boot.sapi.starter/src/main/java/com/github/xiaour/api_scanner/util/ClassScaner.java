@@ -119,12 +119,6 @@ public class ClassScaner implements ResourceLoaderAware {
     }
 
 
-    /**
-     * 传统的获取类路径
-     * @param filePath
-     * @return
-     * @throws ClassNotFoundException
-     */
     public static Set<Class> getClassName(String filePath) throws ClassNotFoundException {
         String flag= File.separator;
         Set<Class> classes= new HashSet<Class>();
@@ -146,10 +140,4 @@ public class ClassScaner implements ResourceLoaderAware {
         return classes;
     }
 
-    public static void main(String[] args) {
-        ClassScaner.scan("com.github.xiaour.api_scanner.config", null).forEach(clazz -> System.out.println(clazz));
-
-        /*String s="com.github.xiaour.api_scanner.config.SapiFactoryAutoConfigure";
-        System.out.println(s.substring(0,s.indexOf("$")));*/
-    }
 }

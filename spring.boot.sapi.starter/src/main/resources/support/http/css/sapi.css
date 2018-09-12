@@ -8,15 +8,25 @@ input::-moz-placeholder{   /* Mozilla Firefox 19+ */color:#DAA520;font-style: ob
 input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */color:#DAA520;font-style: oblique;}
 input:-ms-input-placeholder{  /* Internet Explorer 10-11 */color:#DAA520;font-style: oblique;}
 *{-webkit-border-radius: 0 !important;-moz-border-radius: 0 !important;border-radius: 0 !important;}
+
+.table>tbody>tr>td{
+    padding:3px;vertical-align: middle;
+}
+
 .codeData{min-height: 220px;max-height: 220px;width: 100%;border: 1px solid #CCC;background: #f5f5f5;overflow:auto}
-.codeData-mx{min-height:260px;max-height: 320px;width: 100%;border: 1px solid #CCC;background: #f5f5f5;overflow:auto}
+.codeData-mx{min-height:320px;max-height: 360px;width: 100%;border: 1px solid #CCC;background: #f5f5f5;overflow:auto}
 .form-control{border: 1px solid inherit;}
 .btn{border: 1px solid inherit;}
 .input-md {border: 1px solid #F8F8F8;}
 .modal{color: #696969}
 .jumbotron {padding-top: 15px;padding-bottom: 10px;margin-bottom: 10px;color: inherit;background-color: #F8F8F8}
 .badge{-webkit-border-radius: 50px !important;-moz-border-radius: 50px !important;border-radius: 50px !important;color: #FFF !important;}
-
+.clear-padding{padding-left: 0px;}
+.code-string{color:#993300;}
+.code-number{color:#cc00cc;}
+.code-boolean{color:#000033;}
+.code-null{color:magenta;}
+.code-key{color:#003377;font-weight:bold;}
 
 
 .ObjectBrace{color:#0a0;font-weight:bold}.ArrayBrace{color:#03f;font-weight:bold}.PropertyName{color:#c00;font-weight:bold}.String{color:#077}.Number{color:#a0a}.Boolean{color:#00f}.Function{color:#a63;}.Null{color:#00f}.Comma{color:#000;font-weight:bold}PRE.CodeContainer{margin-top:0;margin-bottom:0}

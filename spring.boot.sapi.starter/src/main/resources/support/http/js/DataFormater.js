@@ -4,15 +4,14 @@ function IsArray(obj) {
         typeof obj === 'object' &&  typeof obj.length === 'number' && !(obj.propertyIsEnumerable('length'));
 }
 
-function Process(continner,json) {
+function formatJson(continner,json) {
     document.getElementById(continner).style.display = "block";
     if (json == "") {
         json = '""';
     }
     var obj = eval("[" + json + "]");
-    var html = ProcessObject(obj[0], 0, false, false, false);
-    document.getElementById(continner).innerHTML =html;
 
+    return ProcessObject(obj[0], 0, false, false, false);
 }
 
 function ProcessObject(obj, indent, addComma, isArray, isPropertyContent) {
@@ -113,6 +112,18 @@ var isXML = function(elem){
     return documentElement ? documentElement.nodeName !== "HTML" : false;
 }
 
+var isJSON=function(str) {
+    if (typeof str == 'string') {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    }
+}
+
+
 function formatXML(continner,content) {
     var xml_doc = (new DOMParser()).parseFromString(content.replace(/[\n\r]/g, ""), 'text/xml');
 
@@ -122,7 +133,7 @@ function formatXML(continner,content) {
             t.push('&nbsp;&nbsp;&nbsp;&nbsp;');
         }
         t = t.join("");
-        list.push(t + '&lt;<span class="code-key">'+ element.nodeName +'</span>&gt;\n');
+        list.push(t + '&lt;<span class="code-key">'+ element.nodeName +'</span>&gt;\n</br>');
         for (var i = 0; i < element.childNodes.length; i++) {
             var nodeName = element.childNodes[i].nodeName;
             if (element.childNodes[i].childNodes.length === 1) {
@@ -130,7 +141,7 @@ function formatXML(continner,content) {
                 var value_color = !isNaN(Number(value)) ? 'code-number' : 'code-string';
                 var value_txt = '<span class="'+ value_color +'">' + value + '</span>';
                 var item = t + '&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="code-key">' + nodeName +
-                    '</span>&gt;' + value_txt + '&lt;/<span class="code-key">' + nodeName + '</span>&gt;\n';
+                    '</span>&gt;' + value_txt + '&lt;/<span class="code-key">' + nodeName + '</span>&gt;</br>';
 
                 list.push(item);
             } else {
@@ -143,15 +154,25 @@ function formatXML(continner,content) {
     var list = [];
     build_xml(0, list, xml_doc.documentElement);
 
-    document.getElementById(continner).innerHTML = list.join("");
+    //document.getElementById(continner).innerHTML = list.join("");
 
     return list.join("");
 }
 
-function copy(obj){
-    var newobj = {};
-    for ( var attr in obj) {
-        newobj[attr] = obj[attr];
+function deepClone(obj){
+    var objClone = Array.isArray(obj)?[]:{};
+    if(obj && typeof obj==="object"){
+        for(key in obj){
+            if(obj.hasOwnProperty(key)){
+                //判断ojb子元素是否为对象，如果是，递归复制
+                if(obj[key]&&typeof obj[key] ==="object"){
+                    objClone[key] = deepClone(obj[key]);
+                }else{
+                    //如果不是，简单复制
+                    objClone[key] = obj[key];
+                }
+            }
+        }
     }
-    return newobj;
+    return objClone;
 }

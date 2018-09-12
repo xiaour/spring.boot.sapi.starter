@@ -12,6 +12,8 @@ public class ApiField {
 
     private boolean isPath=false;//是否路径参数
 
+    private boolean isRequestBody=false;//是否Body参数
+
     public String getType() {
         return type;
     }
@@ -46,6 +48,14 @@ public class ApiField {
 
     public boolean getIsPath() {
         return isPath;
+    }
+
+    public boolean getIsRequestBody() {
+        return isRequestBody;
+    }
+
+    public void setRequestBody(boolean requestBody) {
+        isRequestBody = requestBody;
     }
 
     public void setIsPath(boolean isPath) {

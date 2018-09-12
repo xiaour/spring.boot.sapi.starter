@@ -320,6 +320,10 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
                             apiField.setIsPath(true);
                             break;
                         }
+                        if(annotation.annotationType().getSimpleName().equals("RequestBody")){
+                            apiField.setRequestBody(true);
+                            break;
+                        }
                     }
 
                     apiFields.add(apiField);
