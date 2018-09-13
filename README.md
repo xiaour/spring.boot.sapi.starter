@@ -40,7 +40,7 @@ public class CatController {
  
 4.在浏览器中打开 http://127.0.0.1:{port}/{context-path}/sapi 就可以看到你的API接口了
  
- ![avatar](https://oscimg.oschina.net/oscnet/bfb862085fc470b4cea467550ddf3b3d3f9.jpg)
+ ![avatar](https://oscimg.oschina.net/oscnet/1a3545fa7abcfff02354740d61ce81daf56.jpg)
 
 
 ## 版本功能
