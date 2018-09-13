@@ -10,7 +10,7 @@
 <dependency>
   <groupId>com.github.xiaour</groupId>
   <artifactId>xiaour.springboot.sapi.starter</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
 </dependency>
 ```
 2.启动类加入注解@Sapi.
