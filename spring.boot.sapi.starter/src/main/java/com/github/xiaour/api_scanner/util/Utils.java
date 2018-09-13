@@ -145,7 +145,7 @@ public class Utils {
         } else if ("false".equals(property)) {
             return Boolean.FALSE;
         }
-        return null;
+        return Boolean.FALSE;
     }
 
     public static Integer getInteger(Properties properties, String key) {
@@ -259,7 +259,6 @@ public class Utils {
                 h ^= (long) (data[length & ~7] & 0xff);
                 h *= m;
         }
-        ;
 
         h ^= h >>> r;
         h *= m;

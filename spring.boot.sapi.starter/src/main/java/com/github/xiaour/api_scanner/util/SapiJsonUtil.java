@@ -158,7 +158,7 @@ public class SapiJsonUtil {
 
     public static String collectionJsonUtil(Collection<?> collection, boolean boo){
         String collectionJsonUtil = collectionJsonUtil(collection);
-        if(boo){
+        if(boo&&collectionJsonUtil!=null){
             return jsonFormat(collectionJsonUtil);
         }
         return collectionJsonUtil;
@@ -179,7 +179,7 @@ public class SapiJsonUtil {
 
     public static String arrayJsonUtil(Object[] oobj, boolean boo){
         String arrayJsonUtil = arrayJsonUtil(oobj);
-        if(boo){
+        if(boo&&arrayJsonUtil!=null){
             return jsonFormat(arrayJsonUtil);
         }
         return arrayJsonUtil;
@@ -287,7 +287,7 @@ public class SapiJsonUtil {
 
     public static String objectJsonUtil(Object obj, boolean boo){
         String objectJsonUtil = objectJsonUtil(obj);
-        if(boo){
+        if(boo&&objectJsonUtil!=null){
             return jsonFormat(objectJsonUtil);
         }
         return objectJsonUtil;
@@ -315,7 +315,7 @@ public class SapiJsonUtil {
 
     public static String mapJsonUtil(Map<String,Object> map, boolean boo){
         String mapJsonUtil = mapJsonUtil(map);
-        if(boo){
+        if(boo&&mapJsonUtil!=null){
             return jsonFormat(mapJsonUtil);
         }
         return mapJsonUtil;
