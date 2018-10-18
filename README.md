@@ -5,7 +5,7 @@
 一个简单的API输出工具，只需简单配置，即可将接口中的所有API接口及参数全部以结构化的方式输出的页面上。
 基于SpringMvc或Springboot的接口管理工具
 
-1.下载并打包Jar配置好POM
+1.中央仓库已经发布，使用此POM配置
 ```xml
 <dependency>
   <groupId>com.github.xiaour</groupId>
