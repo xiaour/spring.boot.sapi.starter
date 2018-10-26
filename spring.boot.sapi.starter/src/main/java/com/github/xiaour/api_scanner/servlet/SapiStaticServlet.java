@@ -29,6 +29,7 @@ public class SapiStaticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String contextPath = request.getContextPath();
+
         String servletPath = request.getServletPath();
 
         response.setCharacterEncoding("utf-8");
@@ -38,8 +39,8 @@ public class SapiStaticServlet extends HttpServlet {
         }
 
         String resourceFile=request.getParameter("s");
+
         String uri = contextPath + servletPath;
-        //String path = requestURI.substring(contextPath.length() + servletPath.length());
 
         try {
             returnResourceFile(resourceFile, uri, response);
@@ -55,8 +56,7 @@ public class SapiStaticServlet extends HttpServlet {
     }
 
     protected void returnResourceFile(String fileName, String uri, HttpServletResponse response)
-            throws ServletException,
-            IOException {
+            throws ServletException, IOException {
 
         String filePath = new ApiViewServlet().getFilePath(fileName);
 

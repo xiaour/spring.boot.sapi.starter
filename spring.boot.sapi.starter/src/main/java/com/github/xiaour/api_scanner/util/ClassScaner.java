@@ -27,11 +27,19 @@ public class ClassScaner implements ResourceLoaderAware {
 
     //保存过滤规则要排除的注解
     private final List<TypeFilter> includeFilters = new LinkedList<TypeFilter>();
+
     private final List<TypeFilter> excludeFilters = new LinkedList<TypeFilter>();
 
     private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+
     private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
 
+    /**
+     * 扫描JAVA类
+     * @param basePackages
+     * @param annotations
+     * @return
+     */
     public static Set<Class> scan(String[] basePackages,
                                   Class<? extends Annotation>... annotations) {
         ClassScaner cs = new ClassScaner();

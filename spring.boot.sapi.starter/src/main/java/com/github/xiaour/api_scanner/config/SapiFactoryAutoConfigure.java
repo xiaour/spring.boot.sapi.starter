@@ -78,22 +78,34 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
         AnnotationAttributes attributes = fromMap(annotationMetadata.getAnnotationAttributes(annotationName));
+
         String[] values;
+
         boolean enabled;
+
         //优先从配置文件取值，其次从注解取值
         if(getPack()!=null){
+
             values = getPack().split(",");
+
             enabled = StringUtils.hasText(getEnable())?Boolean.getBoolean(getEnable()):true;
+
         }else {
+
             values = attributes.getStringArray("controllers");
+
             enabled = attributes.getBoolean("enable");
         }
 
         //如果开启，则扫描接口
         if(enabled){
+
             if(values != null) {
+
                 init(values);
+
             }else {
+
                 LOG.error("Sapi annotations not config,Please Configured the Application class @Sapi(controllers={\"your.controller.path1\",\"...\"})");
             }
         }
@@ -138,14 +150,24 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
             simpleApiList= list;
 
         } catch (Exception e) {
+
             LOG.error("SAPI init exception:",e);
         }
     }
 
 
+    /**
+     * 获取所有的自定义方法
+     * @param mLocalClass
+     * @param routes
+     * @param groupTitle
+     * @return
+     */
     private List<ApiInfo> getReflectAllMethod( Class <?> mLocalClass,String [] routes,String groupTitle){
+
         ParameterNameDiscoverer pnd = new LocalVariableTableParameterNameDiscoverer();
-        List<ApiInfo> list= new ArrayList<ApiInfo>();
+
+        List<ApiInfo> list = new ArrayList<ApiInfo>();
 
         try {
             do{
@@ -159,14 +181,13 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
 
                     int length = paramsTypes.length;
 
-
                     for(String route:routes){
 
                         String mod = Modifier.toString(method.getModifiers());
 
                         String metName = method.getName();
 
-                        RequestMapping requestMapping=method.getAnnotation(RequestMapping.class);
+                        RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
 
                         if (mod.equals("public") && !metName.equals("toString") && !metName.equals("equals")) {
 
@@ -174,22 +195,24 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
 
                                 for(String mappingName:requestMapping.value()) {
 
-                                    String requestInfo="";
+                                    String requestInfo ="";
 
                                     RequestMethod[] me = method.getAnnotation(RequestMapping.class).method();
 
                                     for (RequestMethod rm : me) {
 
-                                        requestInfo=rm.name();
+                                        requestInfo = rm.name();
                                     }
 
-                                    if(requestInfo==""){
+                                    if(requestInfo == ""){
 
                                         requestInfo=allRequestType;
 
                                     }
-                                    ApiInfo apiInfo =getApiInfo(method,route,mappingName,pnd,length,paramsTypes,requestInfo,paramAnnotations);
+                                    ApiInfo apiInfo = getApiInfo(method,route,mappingName,pnd,length,paramsTypes,requestInfo,paramAnnotations);
+
                                     apiInfo.setGroupTitle(groupTitle);
+
                                     list.add(apiInfo);
                                 }
                             }else{
@@ -200,8 +223,10 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
 
                                     for(String mappingName:otherMapping.getMappingName()) {
 
-                                        ApiInfo apiInfo=getApiInfo(method,route,mappingName,pnd,length,paramsTypes,otherMapping.getRequestType(),paramAnnotations);
+                                        ApiInfo apiInfo = getApiInfo(method,route,mappingName,pnd,length,paramsTypes,otherMapping.getRequestType(),paramAnnotations);
+
                                         apiInfo.setGroupTitle(groupTitle);
+
                                         list.add(apiInfo);
                                     }
                                 }
@@ -214,19 +239,26 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
                 mLocalClass=mLocalClass.getSuperclass();
 
             }while(mLocalClass!=null);
+
         } catch (Exception e) {
+
             LOG.error("Sapi init exception:",e);
         }
         return list;
     }
 
-    private static ApiInfo getApiInfo(Method method,String route,
-                                      String mappingName,ParameterNameDiscoverer pnd,
-                                      int length,Class<?> paramsTypes[],
-                                      String requestType,Annotation[][] paramAnnotations){
+    private static ApiInfo getApiInfo(Method method,
+                                      String route,
+                                      String mappingName,
+                                      ParameterNameDiscoverer pnd,
+                                      int length,
+                                      Class<?> paramsTypes[],
+                                      String requestType,
+                                      Annotation[][] paramAnnotations){
         ApiInfo apiInfo = new ApiInfo();
 
         if(requestType!=null) {
+
             apiInfo.setRequestType(requestType);
         }
 
@@ -252,10 +284,15 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
     private static OtherMapping getMappingType(Method method){
         OtherMapping otherMapping=new OtherMapping();
         //因为方法上可能有多个注解，所以只能通过需要的注解进行判断
+
         PostMapping postMapping = method.getAnnotation(PostMapping.class);
+
         GetMapping getMapping = method.getAnnotation(GetMapping.class);
+
         DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
+
         PatchMapping  patchMapping = method.getAnnotation(PatchMapping.class);
+
         PutMapping  putMapping = method.getAnnotation(PutMapping.class);
 
         if(postMapping!=null){
@@ -286,6 +323,11 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
         return null;
     }
 
+    /**
+     * 是否是原生的JAVA类
+     * @param clz
+     * @return
+     */
     private static boolean isJavaClass(Class<?> clz) {
 
         if(clz.getName().contains("multipart.MultipartFile")){
@@ -302,9 +344,11 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
      * @return
      */
     private static List<ApiField> getDefaultType(int length,Class<?> paramsTypes[],String[] paramNames,Annotation[][] paramAnnotations){
+
         List<ApiField> apiFields=new ArrayList<ApiField>(length);
 
         for(int i=0;i<length;i++){
+
             if(!paramsTypes[i].getName().contains("javax.servlet.")) {
                 //接口参数
                 if (isJavaClass(paramsTypes[i])) {
@@ -364,6 +408,7 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
      * @return
      */
     private static String getTypeName(String typeName){
+
         return  typeName.toString().substring(typeName.toString().lastIndexOf(".") + 1,typeName.toString().length());
     }
 

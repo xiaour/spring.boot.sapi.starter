@@ -34,11 +34,15 @@ public class ApiViewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
         resp.setContentType("application/json;charset=utf-8");//指定返回的格式为JSON格式
+
         resp.setCharacterEncoding("UTF-8");//setContentType与setCharacterEncoding的顺序不能调换，否则还是无法解决中文乱码的问题
-        String url=req.getRequestURI();
+
+        String url = req.getRequestURI();
 
         if(url.equals(ApiServerAutoConfigure.getContextPath()+"/sapi/list".replaceAll("//","/"))) {
+
             list(req, resp);
         }else {
             index(req,resp);

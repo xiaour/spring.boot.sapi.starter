@@ -28,7 +28,9 @@ public class ApiJsonServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=utf-8");//指定返回的格式为JSON格式
+
         resp.setCharacterEncoding("UTF-8");//setContentType与setCharacterEncoding的顺序不能调换，否则还是无法解决中文乱码的问题
+
         String url=req.getRequestURI();
 
         if(!ApiServerAutoConfigure.apiRouter.contains(url)){
@@ -44,36 +46,44 @@ public class ApiJsonServlet extends HttpServlet {
 
     private void getApiList(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Integer pageNum;
-        int totalPage=-1;
 
-        Map<String,Object> map= new HashMap<String,Object>();
+        int totalPage = -1;
+
+        Map<String,Object> map = new HashMap<String,Object>();
 
         if(request.getParameter("pageNum")!=null){
-            pageNum=Integer.parseInt(request.getParameter("pageNum"));
-            totalPage=getPageCount(pageSize, SapiFactoryAutoConfigure.simpleApiList.size());
+
+            pageNum = Integer.parseInt(request.getParameter("pageNum"));
+
+            totalPage = getPageCount(pageSize, SapiFactoryAutoConfigure.simpleApiList.size());
+
             map.put("apiList",getListByPage(pageSize,pageNum,SapiFactoryAutoConfigure.simpleApiList));
         }else{
+
             map.put("apiList", SapiFactoryAutoConfigure.simpleApiList);
+
         }
         map.put("totalPage",totalPage);
 
         PrintWriter out=response.getWriter() ;
+
         out.write(SapiJsonUtil.mapJsonUtil(map));
+
         out.close();
     }
 
     private void getApiGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Map<String,Object> map= new HashMap<String,Object>();
+        Map<String,Object> map = new HashMap<String,Object>();
 
-        Set<String> group= SapiGroupManager.getSapiGroup();
+        Set<String> group = SapiGroupManager.getSapiGroup();
 
-        List<ApiInfo> apiList= SapiFactoryAutoConfigure.simpleApiList;
+        List<ApiInfo> apiList = SapiFactoryAutoConfigure.simpleApiList;
 
         Map<String,Object> childMap;
 
         for(String title:group){
-            childMap=new HashMap<String, Object>();
+            childMap = new HashMap<String, Object>();
             for(ApiInfo apiInfo:apiList){
                 if(apiInfo.getGroupTitle().equals(title)){
                     childMap.put(apiInfo.getUrl(),apiInfo);
@@ -81,7 +91,8 @@ public class ApiJsonServlet extends HttpServlet {
             }
             map.put(title,childMap);
         }
-        Map<String,Object> resultMap=new HashMap<String, Object>();
+
+        Map<String,Object> resultMap = new HashMap<String, Object>();
         resultMap.put("total",apiList.size());
         resultMap.put("totalModule",group.size());
         resultMap.put("data",map);
@@ -104,7 +115,6 @@ public class ApiJsonServlet extends HttpServlet {
         if (toIndex >= size) {
 
             toIndex = size;
-
         }
         if(pageNum>pageCount+1){
             fromIndex=0;
@@ -120,6 +130,7 @@ public class ApiJsonServlet extends HttpServlet {
 
     public  static Integer getPageCount(Integer pageSize,Integer total){
         int pageCount;
+
         total=total<=0?1:total;
 
         if(pageSize%total>0){

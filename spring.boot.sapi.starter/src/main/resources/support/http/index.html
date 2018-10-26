@@ -101,6 +101,20 @@
                 </tbody>
             </table>
 
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center;">Headers</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="head in reqHeaders">
+                        <td><input type="text" class="form-control input-sm input-md" v-model="head.name" v-on:blur="addHeaders(head)" placeholder="Key"></td>
+                        <td><input type="text" class="form-control input-sm input-md" v-model="head.value" v-on:blur="addHeaders(head)" placeholder="Value"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
             <div v-if="requestBody==true">
 
                 <div class="form-group">
@@ -251,6 +265,7 @@
                     vm2.requestErr = "";
                     vm2.returnData = "requesting...";
                     var requestUrl = vm2.curl;
+                    vm2.reqHeaders=[];
                     if (vm2.requestType == "") {
                         vm2.requestType == vm2.requestTypeArray[0];
                     }
@@ -378,7 +393,7 @@
                                 vm2.changeDataStyle("JSON");
                             } );
 
-                }/*,
+                },
                 addHeaders:function (data) {
                     var header=vm2.reqHeaders;
                     var flag=1;
@@ -392,7 +407,7 @@
                         vm2.reqHeaders.push({name:null,value:null});
                     }
 
-                }*/,close:function () {
+                },close:function () {
                     vm2.debugData="";
                     vm2.returnData="";
                     vm2.resultMsg="0";

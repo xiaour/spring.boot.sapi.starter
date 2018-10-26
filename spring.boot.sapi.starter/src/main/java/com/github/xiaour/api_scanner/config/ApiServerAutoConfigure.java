@@ -34,16 +34,22 @@ public class ApiServerAutoConfigure implements ApplicationListener<WebServerInit
 
     @Override
     public void onApplicationEvent(WebServerInitializedEvent webServerInitializedEvent) {
+
         this.serverPort=webServerInitializedEvent.getWebServer().getPort();
+
         this.contextPath=webServerInitializedEvent.getApplicationContext().getApplicationName();
+
         apiRouter.add(contextPath+"/sapidata/apiList");
+
         apiRouter.add(contextPath+"/sapidata/group");
+
         LOG.info("SAPI page url:http://127.0.0.1:"+getPort()+getContextPath()+"/sapi");
     }
 
     public static int getPort() {
         return serverPort;
     }
+
     public static String getContextPath() {
         return contextPath;
     }
