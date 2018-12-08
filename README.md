@@ -5,14 +5,25 @@
 一个简单的API输出工具，只需简单配置，即可将接口中的所有API接口及参数全部以结构化的方式输出的页面上。
 基于SpringMvc或Springboot的接口管理工具
 
-1.中央仓库已经发布，使用此POM配置
+###快速开始 Quick start
+
+1.远程仓库配置
+1.1 Maven
 ```xml
 <dependency>
-  <groupId>com.github.xiaour</groupId>
-  <artifactId>xiaour.springboot.sapi.starter</artifactId>
-  <version>1.4</version>
+<groupId>com.github.xiaour</groupId>
+<artifactId>xiaour.springboot.sapi.starter</artifactId>
+<version>1.4</version>
 </dependency>
 ```
+1.2 Gradle
+
+```gradle
+compile 'com.github.xiaour:xiaour.springboot.sapi.starter:1.4'
+```
+1.3 [更多仓库配置类型请参考 >>>](https://search.maven.org/artifact/com.github.xiaour/xiaour.springboot.sapi.starter/1.4/jar)
+
+
 2.启动类加入注解@Sapi.
 controllers属性可以声明多个，如controllers = {"com.example.demo.ctrl","com.example.demo2.ctrl"},controllers的路径对应项目中controller所在的路径。enable是SAPI的开关，如果需要上生产环境只需要enable=false就可以了，这样避免在生产暴露接口。
 
@@ -29,23 +40,25 @@ public class DemoApplication {
 3.Controller类加入注解@SapiGroup(title="").
 SapiGroup是用于分组输出的注解，可以在上面加入中文接口注释，该注解可有可无，如不注解，默认输出的是当前类名。
 ```java
-@SapiGroup(title = "小猫管理")
+@SapiGroup(title = "接口分组名称")
 @RestController
 @RequestMapping("/cat")
 public class CatController {
     
 }
 ```
-
  
-4.在浏览器中打开 http://127.0.0.1:{port}/{context-path}/sapi 就可以看到你的API接口了
+4.启动应用控制台将输出SAPI的访问链接，点击链接即可立即开始调试接口。
+```xml
+2018-12-08 21:54:49.328  INFO 1112 --- [  restartedMain] c.g.x.a.config.ApiServerAutoConfigure    : SAPI page url:http://127.0.0.1:8080/demo/sapi
+```
  
  ![avatar](https://oscimg.oschina.net/oscnet/1a3545fa7abcfff02354740d61ce81daf56.jpg)
 
 
 ## 版本功能
 
-当前为1.3版本，实现了输出接口URL和参数，分组输出接口；
+当前为1.4版本，实现了输出接口URL和参数，分组输出接口；
 2.0版本将实现添加接口说明、历史版本接口管理
 -------------------------------------------------------------
 更新日志
