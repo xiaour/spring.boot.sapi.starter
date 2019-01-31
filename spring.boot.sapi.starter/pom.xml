@@ -4,7 +4,7 @@
 
 	<groupId>com.github.xiaour</groupId>
 	<artifactId>xiaour.springboot.sapi.starter</artifactId>
-	<version>1.3</version>
+	<version>1.4.1</version>
 	<build>
 		<plugins>
 			<plugin>

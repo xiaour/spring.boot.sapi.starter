@@ -1,11 +1,10 @@
 package com.sapi.demo;
 
+import com.github.xiaour.sapi.annotation.Sapi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.github.xiaour.api_scanner.annotation.Sapi;
-
-@Sapi(controllers = {"com.sapi.demo.controller"},enable = true)
+@Sapi(controllers = {"com.sapi.demo.controller"})
 @SpringBootApplication
 public class DemoApplication {
 

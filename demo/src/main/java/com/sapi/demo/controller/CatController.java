@@ -1,6 +1,6 @@
 package com.sapi.demo.controller;
 
-import com.github.xiaour.api_scanner.annotation.SapiGroup;
+import com.github.xiaour.sapi.annotation.SapiGroup;
 import org.springframework.web.bind.annotation.*;
 
 /**

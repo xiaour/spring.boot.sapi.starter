@@ -74,7 +74,7 @@
                     </ul>
                 </div><!-- /btn-group -->
 
-                <input type="text" class="form-control" placeholder="Enter your Request URL" v-model="curl">
+                <input type="text" class="form-control" placeholder="请输入 URL" v-model="curl">
                 <span class="input-group-btn">
                 <button class="btn btn-primary" type="button" v-on:click="doDebug(debugData)">Send</button>
                 </span>
@@ -163,7 +163,7 @@
         <div class="container text-center ">
             <br>
             <span>SAPI is a simple api starter for spring</span>
-            <h6> SAPI V1.4 ©️ xiaour</h6>
+            <h6> SAPI V1.4.1 ©️ xiaour</h6>
             <img src="https://img.shields.io/badge/maven-v1.4-blue.svg">
             <img src="https://img.shields.io/badge/github-sapi-green.svg">
             <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg">
@@ -264,7 +264,11 @@
             },doDebug: function (data) {
                     vm2.requestErr = "";
                     vm2.returnData = "requesting...";
-                    var requestUrl = vm2.curl;
+                    let requestUrl = vm2.curl;
+                    if(requestUrl==null||requestUrl==""){
+                       return alert("请先输入URL再执行！");
+                    }
+
                     vm2.reqHeaders=[];
                     if (vm2.requestType == "") {
                         vm2.requestType == vm2.requestTypeArray[0];
