@@ -6,11 +6,10 @@ import com.github.xiaour.sapi.dto.ApiField;
 import com.github.xiaour.sapi.dto.ApiInfo;
 import com.github.xiaour.sapi.logging.Log;
 import com.github.xiaour.sapi.logging.LogFactory;
-
 import com.github.xiaour.sapi.util.ClassScaner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -25,28 +24,34 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static org.springframework.core.annotation.AnnotationAttributes.*;
+import static org.springframework.core.annotation.AnnotationAttributes.fromMap;
 
 @Configuration
 @AutoConfigureBefore(ApiServerAutoConfigure.class)
-@EnableConfigurationProperties({ApiServerAutoConfigure.class})
-@ConfigurationProperties("spring.sapi")
+@EnableConfigurationProperties({ApiServerAutoConfigure.class,SapiProperties.class})
 public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
-
     private final static Log LOG = LogFactory.getLog(SapiFactoryAutoConfigure.class);
 
+    private SapiProperties sapiProperties;
 
-    private String pack;//API类路径,分割
+    @Autowired
+    public SapiFactoryAutoConfigure(SapiProperties sapiProperties) {
+        this.sapiProperties = sapiProperties;
+    }
 
-    private String enable;//enable SAPI
+    public SapiFactoryAutoConfigure() {
+        super();
+    }
+
 
     public static List<ApiInfo> simpleApiList;
 
     private static final String allRequestType="POST,GET,PUT,DELETE,PATCH";
-
-
 
     static class OtherMapping{
         private String [] mappingName;
@@ -80,11 +85,11 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
         boolean enabled;
 
         //优先从配置文件取值，其次从注解取值
-        if(getPack()!=null){
+        if(sapiProperties!=null){
 
-            values = getPack().split(",");
+            values = sapiProperties.getControllers().split(",");
 
-            enabled = StringUtils.hasText(getEnable())?Boolean.getBoolean(getEnable()):true;
+            enabled = StringUtils.hasText(sapiProperties.getEnable())?Boolean.getBoolean(sapiProperties.getEnable()):true;
 
         }else {
 
@@ -405,22 +410,8 @@ public class SapiFactoryAutoConfigure implements ImportBeanDefinitionRegistrar{
      */
     private static String getTypeName(String typeName){
 
-        return  typeName.toString().substring(typeName.toString().lastIndexOf(".") + 1,typeName.toString().length());
+        return  typeName.toString().substring(typeName.lastIndexOf(".") + 1,typeName.length());
     }
 
-    public String getPack() {
-        return pack;
-    }
 
-    public void setPack(String pack) {
-        this.pack = pack;
-    }
-
-    public String getEnable() {
-        return enable;
-    }
-
-    public void setEnable(String enable) {
-        this.enable = enable;
-    }
 }
