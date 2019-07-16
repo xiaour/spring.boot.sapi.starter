@@ -2,8 +2,10 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.xiaour/xiaour.springboot.sapi.starter.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.xiaour%22%20AND%20a:%22xiaour.springboot.sapi.starter%22)
 
 # spring.boot.sapi.starter
-一个简单的API输出工具，只需简单配置，即可将接口中的所有API接口及参数全部以结构化的方式输出的页面上。
-基于SpringMvc或Springboot的接口管理工具
+基于Springboot2.x 的接口管理工具，一个简单的API输出工具。
+
+只需简单配置，即可将接口中的所有API接口及参数全部以结构化的方式展示，并提供了接口参数测试页面。
+
 
 ## 快速开始 Quick start
 
