@@ -10,18 +10,13 @@
     <style>
         .btn.active,.btn:active:focus,.btn:focus {outline:medium}
          textarea,input,button{background:none;outline:medium;border:1px black solid;}
-        .input_st {border: 0px;border-bottom: 1px solid #CCCCCC;background-color:#F8F8F8;}
-        .input_title {min-width: 430px;}
-        .input_st:hover {border: 1px;border-bottom: 1px solid #CCCCCC;background-color:#F8F8F8;}
+
         input::-webkit-input-placeholder{color:#DAA520;font-style: oblique;}
         input::-moz-placeholder{   /* Mozilla Firefox 19+ */color:#DAA520;font-style: oblique;}
         input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */color:#DAA520;font-style: oblique;}
         input:-ms-input-placeholder{  /* Internet Explorer 10-11 */color:#DAA520;font-style: oblique;}
         *{-webkit-border-radius: 0 !important;-moz-border-radius: 0 !important;border-radius: 0 !important;}
-        .form-control{border: 1px solid inherit;}
          .btn{border: 1px solid inherit;}
-        .input-md {border: 1px solid #F8F8F8;}
-        .modal{color: #696969}
         .jumbotron{background-color: #F8F8F8}
     </style>
 </head>
@@ -58,7 +53,7 @@
                     <h3 class="panel-title">SAPI如何测试？</h3>
                 </div>
                 <div class="panel-body">
-                    打开了http://127.0.0.1:{your.port}/{your.contextPath}/spai后，在每个接口右侧页面上可以看到一个绿色的三角按钮(<button type="button" class="btn btn-success btn-xs">
+                    打开了http://127.0.0.1:{your.port}/{your.contextPath}/sapi后，在每个接口右侧页面上可以看到一个绿色的三角按钮(<button type="button" class="btn btn-success btn-xs">
                     <span class="glyphicon glyphicon-play"></span>
                 </button>)。对相关参数进行赋值后点击<button type="button" class="btn btn-primary btn-xs">Send</button>就可以看到相关的输出结果了。
                 </div>
@@ -91,10 +86,6 @@
                 </div>
             </div>
 
-            <br>
-            <p>开发者微信&QQ</p>
-            <hr>
-            <span>欢迎加微信 <kbd>Ghost-999</kbd>或QQ：<kbd>849093078</kbd></span>
         </div>
     </div>
 
